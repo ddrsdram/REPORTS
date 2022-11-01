@@ -10,11 +10,11 @@ require "spl_autoload_register.php";
 print date ("Y-m-d H:i:s");
 print "</br>";
 
-
+$security = new \properties\security();
 $ftp = new \models\ftp();
-$ftp->setHost('13.14.0.6');
-$ftp->setLogin('backupmanager');
-$ftp->setPass("xnqot73obxoq48w");
+$ftp->setHost($security->getBackupFtpServer());
+$ftp->setLogin($security->getBackupFtpUser());
+$ftp->setPass($security->getBackupFtpPassword());
 $ftp->connection();
 $ftp->setDirSource('');
 $ftp->setDirDestination('/hdd2');
