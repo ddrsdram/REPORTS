@@ -33,7 +33,7 @@ spl_autoload_register(function ($class) {
 
     $class = $class . '.php';
     $class = str_replace("\\", "/", $class);
-    print $class;
+  //  print $class;
     //  print chr(13).chr(10)."</br> $class </br>".chr(13).chr(10);
     if (file_exists($class)) {
         require_once $class;
