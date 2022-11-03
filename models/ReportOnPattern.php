@@ -546,6 +546,7 @@ class ReportOnPattern
      */
     private function prepareData($nameArray)
     {
+        //\models\ErrorLog::saveError(current($this->tt1),typeSaveMode: "w+");
         $this->activTable = $nameArray;
         $this->{$nameArray} = current((Array)$this->{'t'.$nameArray});
         $this->{'next'.$nameArray} = next($this->{'t'.$nameArray});
@@ -778,11 +779,11 @@ class ReportOnPattern
             shell_exec($cmd);
             //soffice --headless --convert-to html Математика
             //Конвертирует все поддерживаемые файлы в каталоге Математика в html формат и сохранит их в текущем каталоге
-          //  unlink($fileName);
+            unlink($fileName);
         }
 
         $newfile = "$this->resultFilePath/{$this->resultFileName}_TMP.xlsx";
-        //unlink($newfile);
+        unlink($newfile);
     }
 
 
