@@ -31,6 +31,9 @@ class MODEL extends \Reports\reportModel
             $summa = (int)$value['saldoEnd'] * 100;
             $value['QR_SBER'] = "ST00012|Name={$requisites['name_organization']}|PersonalAcc={$requisites['RSCH']}|BankName={$requisites['name_bank']}|BIC={$requisites['BIK']}|CorrespAcc={$requisites['KSCH']}|Sum={$summa}|persAcc={$value['id_LS']}|PayeeINN={$requisites['INN']}|";
             $ret[$value['id_LS']] = $value;
+            $ret[$value['id_LS']]['table_recalculate'] = Array();
+            $ret[$value['id_LS']]['communal_table']  = Array();
+            $ret[$value['id_LS']]['standards_volume']  = Array();
         }
         $data_table = $conn_table->table('View_BB_table_typeAccrual')
             ->where('id_user',$id_user)
