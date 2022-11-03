@@ -11,8 +11,8 @@ class ftp
     function __construct()
     {
         $this->host = '127.0.0.1';
-        $this->login = 'sediant';
-        $this->pass = 'Cthzrjd790409';
+        $this->login = '';
+        $this->pass = '';
         $this->dirSource = $_SERVER['DOCUMENT_ROOT'].'ImpExp';
         $this->dirDestination = 'download';
     }
