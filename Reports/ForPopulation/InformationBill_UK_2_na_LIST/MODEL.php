@@ -34,6 +34,9 @@ class MODEL extends \Reports\reportModel
             //$value['QR_SBER'] = 'ST00012|Name=ООО "Беловский ЦКП"|PersonalAcc=40702810232220000702|BankName=Филиал ПАО "Банк Уралсиб" в г.Новосибирск|BIC=045004725|CorrespAcc=30101810400000000725|Sum=381492|persAcc=100825|PayeeINN=4202024530|SERVICENAME=24540|';
             $ret[$value['id_LS']] = $value;
             $ret[$value['id_LS']]['table_recalculate'] = Array();
+
+            $ret[$value['id_LS']]['sod_table'] = Array();
+
             $ret[$value['id_LS']]['communal_table']  = Array();
             $ret[$value['id_LS']]['standards_volume']  = Array();
         }
