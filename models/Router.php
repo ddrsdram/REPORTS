@@ -71,6 +71,8 @@ class Router
         //$Object->setIdReport();
         $Object->run();
 
+        $this->setEndTimeForReport(); // пометим во сколько закончилось формирование отчета
+
         $app = new \models\ftp();
 
         if (array_key_exists("host",            $_REQUEST)) $app->setHost(              $_REQUEST['host']);
@@ -123,6 +125,11 @@ class Router
         $this->report = $res['report'];
     }
 
+    private function setEndTimeForReport()
+    {
+        $query = "update reports_register set endDate = getdate() where id = '{$this->id_Reports_register}'";
+        $res = $this->conn->complexQuery($query);
+    }
 
     /**
      * @param mixed $argument_array
