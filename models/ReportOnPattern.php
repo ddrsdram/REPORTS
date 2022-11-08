@@ -473,13 +473,13 @@ class ReportOnPattern
                 /* *************************************************************************/
 
                 if ($typeData == 'Date'){
-                    $month = date('m',strtotime($val));
-                    $day = date('d',strtotime($val));
-                    $year = date('Y',strtotime($val));
+                    $month = (int) date('m',strtotime($val));
+                    $day = (int) date('d',strtotime($val));
+                    $year = (int) date('Y',strtotime($val));
                     $time = gmmktime(0,0,0,$month,$day,$year);
                     $destSheet->getCell($dstCell)->setValue(\PhpOffice\PhpSpreadsheet\Shared\Date::PHPToExcel($time));
                     $destSheet->getStyle($dstCell)
-                        ->getNumberFormat()
+                     ->getNumberFormat()
                         ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_DATE_DDMMYYYYPOINT);
                 }
 
