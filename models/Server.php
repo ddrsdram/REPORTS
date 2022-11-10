@@ -22,7 +22,7 @@ class Server
         print "</br>".chr(10).chr(13);
 
         $convertSMS = new ConvertSMS();
-        $conn = new \backend\Connection();
+        $conn = new \backend\Connection(\backend\Connection::GD);
 
 
         $this->modem->writeData("at+csq");
