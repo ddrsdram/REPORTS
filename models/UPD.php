@@ -140,7 +140,11 @@ class UPD
      */
     public function prepareData($classReports)
     {
-        $conn = new \backend\Connection();
+        $security = new \DB\Connect(\DB\Connect::GD);
+        $arrayConnectionSettings = $security->table("ORG")
+            ->where("ORG",$this->ORG)
+            ->select("serverName, [dataBase], userName, password")->fetch();
+        $conn = new \backend\Connection($arrayConnectionSettings);
         /*
          * Подготовка Шапки
          */

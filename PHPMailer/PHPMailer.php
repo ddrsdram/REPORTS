@@ -152,7 +152,7 @@ class PHPMailer
      * Only supported in simple alt or alt_inline message types
      * To generate iCal event structures, use classes like EasyPeasyICS or iCalcreator.
      *
-     * @see http://sprain.ch/blog/downloads/php-class-easypeasyics-create-ical-files-with-php/
+     * @see http://sprain.ch/blog/download/php-class-easypeasyics-create-ical-files-with-php/
      * @see http://kigkonsult.se/iCalcreator/
      *
      * @var string

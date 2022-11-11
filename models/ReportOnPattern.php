@@ -546,7 +546,6 @@ class ReportOnPattern
      */
     private function prepareData($nameArray)
     {
-        //\models\ErrorLog::saveError(current($this->tt1),typeSaveMode: "w+");
         $this->activTable = $nameArray;
         $this->{$nameArray} = current((Array)$this->{'t'.$nameArray});
         $this->{'next'.$nameArray} = next($this->{'t'.$nameArray});

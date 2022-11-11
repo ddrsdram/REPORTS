@@ -20,10 +20,10 @@ $addDocument = false;
 $sendMailMyOnly = false;
 
 
+/*
 if ($addDocument === true){
     // перейти в новый месяц (или Узнать новый месяц)
-    $data = $conn->complexQuery("update S_B_K_CurentMonth set id_month = id_month+1");
-
+//    $data = $conn->complexQuery("update S_B_K_CurentMonth set id_month = id_month+1");
 
     //сформировать суммы по всем организациям для УПД
 
@@ -44,6 +44,7 @@ FROM         (SELECT     ORG, summa, s_min, s_max, id_month, procent, ROUND(summ
 
 
 }
+*/
 // сделать запрос сумм для УПД
 
 $data = $conn->complexQuery("
@@ -73,9 +74,8 @@ while ($res = $data->fetch()){
     $UPD->setContractNum($res['Contract_num']);
     $UPD->setContractDate($res['Contract_date']);
     $filename  = $UPD->create();
-  //  unlink(__DIR__."/downloads/Универсальный_передаточный_документ.pdf");
-
-    rename(__DIR__."/downloads/$filename",__DIR__."/downloads/Универсальный_передаточный_документ.pdf");
+    unlink(__DIR__."/download/Универсальный_передаточный_документ.pdf");
+    rename(__DIR__."/download/$filename",__DIR__."/download/Универсальный_передаточный_документ.pdf");
 
 
     $fio =  $res['IO'];
@@ -95,7 +95,7 @@ while ($res = $data->fetch()){
         $mail->setAddress($res['eMail']);
     $mail->setSubject($subject);
     $mail->setContent($message);
-    $mail->setAttachFile(__DIR__."/downloads/Универсальный_передаточный_документ.pdf");
+    $mail->setAttachFile(__DIR__."/download/Универсальный_передаточный_документ.pdf");
     $mail->send();
     unset($mail);
 

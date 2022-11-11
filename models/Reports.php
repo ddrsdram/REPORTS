@@ -12,8 +12,9 @@ class Reports
 
     function __construct()
     {
-        $this->conn = new \backend\Connection(true);
-        $this->serverName = "http://13.14.0.190/index.php";
+        $this->conn = new \DB\Connect(\DB\Connect::GD);
+        $security = new \properties\security();
+        $this->serverName = $security->getPrintServer();
 
         $this->wait = 0;
     }
@@ -74,19 +75,19 @@ class Reports
         //$security = new \properties\security(true);
         $array = array(
             'id'            => $id_reports_register,
+            'port'          => $security->getThisFtpServerPort(),
             'host'          => $security->getThisFtpServerHost(),
             'login'         => $security->getThisFtpServerLogin(),
             'pass'          => $security->getThisFtpServerPassword(),
 
-            "DB_serverName" => $security->getServerName_DB(),
-            "DB_dataBase"   => $security->getDataBase_DB(),
-            "DB_userName"   => $security->getUserName_DB(),
-            "DB_password"   => $security->getPassword_DB(),
+            "DB_serverName" => $security->getGD_ServerName(),
+            "DB_dataBase"   => $security->getGD_DataBase(),
+            "DB_userName"   => $security->getGD_UserName(),
+            "DB_password"   => $security->getGD_Password(),
 
             'dirDestination'=> $security->getDownloadDir()
 
         );
-
         $ch = curl_init($this->serverName);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $array);
