@@ -22,7 +22,7 @@ class createAndSend
     public function __construct()
     {
         $this->zip = new \ZipArchive;
-        $this->res = $this->zip->open("/var/www/html/downloads/BackUpOrgMonth.zip",\ZIPARCHIVE::CREATE);
+        $this->res = $this->zip->open("/var/www/html/download/BackUpOrgMonth.zip",\ZIPARCHIVE::CREATE);
         $this->zip->setPassword('rezzalbob');
 
         print "ZIPPPP <br>$this->res</br>";
@@ -72,7 +72,7 @@ class createAndSend
         $mail->setAddress($to);
         $mail->setSubject($this->subject);
         $mail->setContent($this->message);
-        $mail->setAttachFile('/var/www/html/downloads/BackUpOrgMonth.zip');
+        $mail->setAttachFile('/var/www/html/download/BackUpOrgMonth.zip');
         $mail->send();
         print "<b> send</b>";
     }

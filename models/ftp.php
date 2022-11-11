@@ -3,7 +3,7 @@ namespace models;
 
 class ftp
 {
-    private $host,$login,$pass;
+    private $host,$port,$login,$pass;
     private $fileSource,$fileDestination;
     private $dirSource,$dirDestination;
     private $idConnect;
@@ -11,10 +11,22 @@ class ftp
     function __construct()
     {
         $this->host = '127.0.0.1';
+        $this->port = 21;
         $this->login = '';
         $this->pass = '';
         $this->dirSource = $_SERVER['DOCUMENT_ROOT'].'ImpExp';
         $this->dirDestination = 'download';
+    }
+
+
+    /**
+     * @param $port
+     * @return $this
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+        return $this;
     }
 
     /**
@@ -91,7 +103,8 @@ class ftp
 
     public function connection()
     {
-        $this->idConnect = ftp_connect($this->host);
+
+        $this->idConnect = ftp_connect($this->host,$this->port);
         if (ftp_login($this->idConnect, $this->login, $this->pass)) {
             ftp_pasv($this->idConnect, true);
         }

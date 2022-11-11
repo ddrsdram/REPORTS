@@ -50,7 +50,7 @@ class QR extends QR_constant
     public $biSizeImage = 0;// Размер изображения в байтах.
     public $bfSize = 0;// Размер файла
 
-    private $path = '/downloads';
+    private $path = '/download';
     private $streem = 'TXT';
     private $sizeInPixels = 100;
 

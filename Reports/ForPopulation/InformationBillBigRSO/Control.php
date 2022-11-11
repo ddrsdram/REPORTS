@@ -35,7 +35,6 @@ class Control extends \Reports\reportControl
         }
         $this->MODEL->updateReports_register();
         $data = $this->MODEL->getDataArray();
-        \models\ErrorLog::saveError($data,'data.txt','w+');
         $report = new \models\ReportOnPattern();
 
         $report->setExcelPatternPath(__DIR__);

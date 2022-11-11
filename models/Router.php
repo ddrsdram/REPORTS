@@ -73,15 +73,16 @@ class Router
 
         $this->setEndTimeForReport(); // пометим во сколько закончилось формирование отчета
 
-        $app = new \models\ftp();
+        $ftp = new \models\ftp();
 
-        if (array_key_exists("host",            $_REQUEST)) $app->setHost(              $_REQUEST['host']);
-        if (array_key_exists("login",           $_REQUEST)) $app->setLogin(             $_REQUEST['login']);
-        if (array_key_exists("pass",            $_REQUEST)) $app->setPass(              $_REQUEST['pass']);
-        if (array_key_exists("dirDestination",  $_REQUEST)) $app->setDirDestination(    $_REQUEST['dirDestination']);
+        if (array_key_exists("host",            $_REQUEST)) $ftp->setHost(              $_REQUEST['host']);
+        if (array_key_exists("port",            $_REQUEST)) $ftp->setPort(              $_REQUEST['port']);
+        if (array_key_exists("login",           $_REQUEST)) $ftp->setLogin(             $_REQUEST['login']);
+        if (array_key_exists("pass",            $_REQUEST)) $ftp->setPass(              $_REQUEST['pass']);
+        if (array_key_exists("dirDestination",  $_REQUEST)) $ftp->setDirDestination(    $_REQUEST['dirDestination']);
         //dirDestination
         $fileName = $Object->getFileNameReport();
-        $app ->connection()
+        $ftp ->connection()
             ->setFileSource($fileName)
             ->setFileDestination($this->id_Reports_register)
             ->copy();
