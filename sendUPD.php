@@ -33,13 +33,13 @@ insert into S_B_K_UniversalPaymentDocument (ORG
       ,invoicedAamount)
 SELECT     ORG, id_month, CASE WHEN itogo < s_min THEN s_min WHEN itogo > s_max THEN s_max ELSE itogo END AS invoicedAamount
 FROM         (SELECT     ORG, summa, s_min, s_max, id_month, procent, ROUND(summa / 100 * procent, 2) AS itogo
-                       FROM          (SELECT     TOP (100) PERCENT dbo.accruals.ORG, SUM(dbo.accruals.summa) AS summa, dbo.S_B_K_MinMaxSumm.s_min, 
+                       FROM          (SELECT     TOP (100) PERCENT dbo.accruals.ORG, SUM(dbo.accruals.summa) AS summa, dbo.S_B_K_MinMaxSumm.s_min,
                                                                       dbo.S_B_K_MinMaxSumm.s_max, dbo.S_B_K_CurentMonth.id_month, dbo.S_B_K_MinMaxSumm.procent
                                                FROM          dbo.accruals INNER JOIN
                                                                       dbo.S_B_K_CurentMonth ON dbo.accruals.id_month = dbo.S_B_K_CurentMonth.id_month INNER JOIN
                                                                       dbo.S_B_K_MinMaxSumm ON dbo.accruals.ORG = dbo.S_B_K_MinMaxSumm.ORG
                                                WHERE      (dbo.accruals.id_level_totals = 30) AND (dbo.accruals.id_sub_level_accrual = 1)
-                                               GROUP BY dbo.accruals.ORG, dbo.S_B_K_MinMaxSumm.s_min, dbo.S_B_K_MinMaxSumm.s_max, dbo.S_B_K_CurentMonth.id_month, 
+                                               GROUP BY dbo.accruals.ORG, dbo.S_B_K_MinMaxSumm.s_min, dbo.S_B_K_MinMaxSumm.s_max, dbo.S_B_K_CurentMonth.id_month,
                                                                       dbo.S_B_K_MinMaxSumm.procent) AS t2) AS t1");
 
 

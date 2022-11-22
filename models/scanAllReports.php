@@ -16,7 +16,7 @@ class scanAllReports
     private $files;
     function __construct()
     {
-        $this->conn = new \backend\Connection(true);
+        $this->conn = new \DB\Connect(\DB\Connect::SECURITY);
 
     }
 
@@ -57,15 +57,21 @@ class scanAllReports
                         $path1 = str_replace("/","\\",$path);
 
                         print "</br>";
-                        Print $this->conn->table("reports")
+                        try {
+                            $this->conn->table("reports")
                                 ->set("report",$path1)
                                 ->insert();
-                            $this->conn->table("reports")
-                                ->where ("report",$path1)
-                                ->set("name",$Object->getDescriptionReport())
-                                ->set("description",$Object->getDescriptionReport())
-                                ->set("manageTable",$Object->getManageTable())
-                                ->update();
+                        }catch (\PDOException $e){
+
+                            print "Ключь уже есть</br>";
+                        }
+
+                        $this->conn->table("reports")
+                            ->where ("report",$path1)
+                            ->set("name",$Object->getDescriptionReport())
+                            ->set("description",$Object->getDescriptionReport())
+                            ->set("manageTable",$Object->getManageTable())
+                            ->update();
                         unset($Object);
                     }
                 }

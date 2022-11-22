@@ -13,11 +13,6 @@ namespace Reports\IMPEXP\Download\AccrualsForMail_OLD;
 
 class VIEW extends \Reports\reportView
 {
-    private $resultFilePath ;
-    /**
-     * @var \backend\Connection
-     */
-    private $data;
 
     function __construct()
     {

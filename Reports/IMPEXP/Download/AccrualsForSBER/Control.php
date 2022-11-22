@@ -15,10 +15,6 @@ class Control extends \Reports\reportControl
 
 
         $this->MODEL = new MODEL($this->id_report);
-
-        $H = $this->MODEL->getHeadArray();
-
-        $this->extensionName = $this->MODEL->getExtensionForRegion($H['DataAccrualsForSBER_id_region']);
         $this->defineModelVariable();
 
 
@@ -29,6 +25,9 @@ class Control extends \Reports\reportControl
 
     public function run()
     {
+        $H = $this->MODEL->getHeadArray();
+        $this->extensionName = $this->MODEL->getExtensionForRegion($H['DataAccrualsForSBER_id_region']);
+        $this->defineModelVariable();
 
 
         $fileName = "tc".sprintf('%02d',date('d')).sprintf('%02d',date('m'))."0.";
