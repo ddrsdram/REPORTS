@@ -13,12 +13,6 @@ namespace Reports\IMPEXP\Download\AccrualsForUralRing;
 
 class VIEW extends \Reports\reportView
 {
-    private $resultFilePath ;
-    /**
-     * @var \backend\Connection
-     */
-    private $data;
-
     function __construct()
     {
         $path = $_SERVER['DOCUMENT_ROOT'];

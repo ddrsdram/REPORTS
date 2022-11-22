@@ -15,7 +15,16 @@ class Control extends \Reports\reportControl
 
 
         $this->MODEL = new MODEL($this->id_report);
+        $this->defineModelVariable();
 
+
+        $this->VIEW = new VIEW();
+        $this->defineViewVariable();
+
+    }
+
+    public function run()
+    {
         $H = $this->MODEL->getHeadArray();
 
         $this->extensionName = $this->MODEL->getExtensionForRegion($H['DataAccrualsForSBER_id_region']);
@@ -27,13 +36,6 @@ class Control extends \Reports\reportControl
         $this->defineModelVariable();
 
 
-        $this->VIEW = new VIEW();
-        $this->defineViewVariable();
-
-    }
-
-    public function run()
-    {
         $this->MODEL->updateReports_register();
         $this->nameReport = $this->id_report;
         $this->defineViewVariable();
