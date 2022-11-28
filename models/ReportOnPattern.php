@@ -270,8 +270,9 @@ class ReportOnPattern
         }
 
         foreach ($Array as $key => $newArray){
-            if (is_array($newArray))
+            if (is_array($newArray)) {
                 $this->arrayProcessing($newArray);
+            }
         }
 
         if (array_key_exists("rowsInTable",$Array)){
@@ -383,18 +384,24 @@ class ReportOnPattern
         for($row = $Array['row']; $row < $Array['row']+$Array['rows']; $row++){
             for($col = 1; $col<=$this->widthReport; $col++){
                 $value = $this->getCellValue($col,$row);
+                if ($value == null) $value = '';
                 $aggregateFunction = mb_substr($value,1,3);
                 $regexp = "/'[\w\s]+'/ui";
                 preg_match($regexp,$value,$arr);
-                $variable = str_replace("'","",$arr[0]);
-                $variable = str_replace('"',"",$variable);
-                switch ($aggregateFunction){
-                    case 'SUM':
-                    case 'MIN':
-                    case 'MAX':
-                        $this->group[$nameTable][$Array['nameBlock']][$aggregateFunction][$variable]=$rowData[$variable];
-                        break;
+                if (count ($arr) != 0){
+                    $variable = str_replace("'","",$arr[0]);
+                    $variable = str_replace('"',"",$variable);
+                    switch ($aggregateFunction){
+                        case 'SUM':
+                        case 'MIN':
+                        case 'MAX':
+                            $this->group[$nameTable][$Array['nameBlock']][$aggregateFunction][$variable] = $rowData[$variable];
+                            break;
+                    }
+                }else{
+                    $this->group[$nameTable][$Array['nameBlock']][$aggregateFunction][$variable] = '';
                 }
+
             }
         }
         $this->{'initGroup'.$nameTable.$nameBlock} = false;
@@ -458,7 +465,7 @@ class ReportOnPattern
                     }
 
                     if (substr($val1,1,5)=='SHEET'){
-                        //
+                        // отрезение создержимого постранично используется в  namespace Reports\ForPopulation\advert;
                         $this->SheetResult->getPageSetup()->addPrintAreaByColumnAndRow(1,$this->range_printArea_RowStart,$destColumnStart + $colCount,($destRowStart + $rowCount)-1,0);
                         $this->range_printArea_RowStart = ($destRowStart + $rowCount+1) ;
                         $typeData = 'SHEET';
@@ -672,7 +679,6 @@ class ReportOnPattern
 
         $str = $str.'}';
         $this->table = json_decode($str,true);
-
         if ( is_Array($this->table)){
             return true;
         }else {
