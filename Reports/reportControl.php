@@ -20,12 +20,12 @@ abstract class reportControl
     function __destruct()
     {
         // TODO: Implement __destruct() method.
-/*
+
         $conn = new \backend\Connection();
         $conn->table($this->manageTable)
             ->where('id_user',$this->MODEL->getUser())
             ->delete();
-*/
+
     }
 
     abstract protected function run();
