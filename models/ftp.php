@@ -7,6 +7,7 @@ class ftp
     private $fileSource,$fileDestination;
     private $dirSource,$dirDestination;
     private $idConnect;
+    private $fileRegistry;
 
     function __construct()
     {
@@ -18,6 +19,13 @@ class ftp
         $this->dirDestination = 'download';
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFileRegistry()
+    {
+        return $this->fileRegistry;
+    }
 
     /**
      * @param $port
@@ -125,6 +133,7 @@ class ftp
 
     public function download()
     {
+        $this->fileRegistry = '';
         $this->ftp_download_dir($this->dirSource, $this->dirDestination);
     }
 
@@ -148,6 +157,7 @@ class ftp
                 ftp_chdir($this->idConnect, "..");
                 $this->ftp_download_dir($file, $drc . '/' . $file);
             } else {
+                $this->fileRegistry .= " $file, </br>".chr(10).chr(13);
                 ftp_get($this->idConnect, $file, $file, FTP_BINARY);
             }
         }
