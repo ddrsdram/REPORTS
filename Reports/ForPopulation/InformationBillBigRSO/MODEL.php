@@ -74,6 +74,9 @@ class MODEL extends \Reports\reportModel
                 $val['value'] = $value['value4'];
             }
 
+            if (in_array($id_type_calculate, Array(20))){ // типа баня по людям. фиксированный объем на конкретного селовека
+                $val['value'] = $value['value2'];
+            }
 
             if ($value['id_type_accrual'] == 6){ //если отопление
                 $val['value'] = $value['value3'] * ($value['value4'] + $value['value5'] + $value['value6']);
