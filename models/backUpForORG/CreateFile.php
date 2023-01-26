@@ -13,7 +13,15 @@ class CreateFile
 {
 
     private $tableName,$whereMonth;
+    private $connection_array = Array();
 
+    /**
+     * @param array $connection_array
+     */
+    public function setConnectionArray(array $connection_array)
+    {
+        $this->connection_array = $connection_array;
+    }
 
     /**
      * @param mixed $whereMonth
@@ -34,6 +42,7 @@ class CreateFile
     public function create($pathNameReport)
     {
         $report = new  \models\Reports();
+        $report->setConnectionArray($this->connection_array);
         $report->setWait(1);
         $report->prepareReport($pathNameReport);
         $this->prepareData($report);
@@ -48,7 +57,7 @@ class CreateFile
      */
     public function prepareData($classReports)
     {
-        $conn = new \backend\Connection();
+        $conn = new \backend\Connection($this->connection_array);
         /*
          * Подготовка Шапки
          */
