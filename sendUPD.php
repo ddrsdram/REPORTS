@@ -17,7 +17,7 @@ $conn = new \backend\Connection(\backend\Connection::GD);
 $conn_update = new \backend\Connection(\backend\Connection::GD);
 
 $addDocument = false;
-$sendMailMyOnly = false;
+$sendMailMyOnly = true;
 
 
 /*

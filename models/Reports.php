@@ -10,6 +10,10 @@ class Reports
     private $conn;
     private $GUID_Report;
 
+    private $connection_array = false;
+
+
+
     function __construct()
     {
         $this->conn = new \DB\Connect(\DB\Connect::GD);
@@ -17,6 +21,15 @@ class Reports
         $this->serverName = $security->getPrintServer();
 
         $this->wait = 0;
+    }
+
+
+    /**
+     * @param array $connection_array
+     */
+    public function setConnectionArray(array $connection_array)
+    {
+        $this->connection_array = $connection_array;
     }
 
     /**
@@ -88,6 +101,15 @@ class Reports
             'dirDestination'=> $security->getDownloadDir()
 
         );
+
+        // Если указаны другие параметры соединения
+        if ($this->connection_array !== false){
+            $array['DB_serverName']     = $this->connection_array['serverName'];
+            $array['DB_dataBase']       = $this->connection_array['dataBase'];
+            $array['DB_userName']       = $this->connection_array['userName'];
+            $array['DB_password']       = $this->connection_array['password'];
+        }
+
         $ch = curl_init($this->serverName);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $array);

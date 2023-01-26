@@ -2,6 +2,8 @@
 
 namespace models;
 
+use properties\security;
+
 class ErrorLog
 {
     static function saveError($value, $fileName = 'MyErrorLog.txt',$typeSaveMode = "a")
@@ -13,7 +15,7 @@ class ErrorLog
 
 //        $file = fopen($_SERVER['DOCUMENT_ROOT']."/".$fileName, $typeSaveMode);
         //$path = $_SESSION['__DIR__'];
-        $path = $_SERVER['DOCUMENT_ROOT'];
+        $path = security::DOCUMENT_ROOT_PATH;
         $file = fopen("$path/log/".$fileName, $typeSaveMode);
 
         fwrite($file, $out . "\r\n");
