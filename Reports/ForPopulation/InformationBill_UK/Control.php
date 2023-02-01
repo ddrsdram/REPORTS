@@ -51,7 +51,7 @@ class Control extends \Reports\reportControl
         if ($headArray['PDF'] == 'PDF'){
             $report->saveToPdf();
         }
-        $report->setDefaultRowHeight(12);
+        $report->setDefaultRowHeight(11);
         $report->run();
         //sleep(10);
         // TODO: Implement run() method.
