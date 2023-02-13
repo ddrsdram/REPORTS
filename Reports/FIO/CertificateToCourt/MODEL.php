@@ -17,8 +17,8 @@ class MODEL extends \Reports\reportModel
     {
         $conn = new \backend\Connection();
 
-        $returnArray = Array();
-        //$returnArray = $this->headArray;
+
+        $returnArray = $this->getHeadArray();
         $data = $conn->table('View_REP_FIO_Certificate_1')
             ->where('id_user',$this->getUser())
             ->select();
