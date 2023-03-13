@@ -1,5 +1,5 @@
 <?php
-namespace Reports\AreDifferent\decryption_hotWater_byHouse2;
+namespace Reports\AreDifferent\decryption_hotWater_byHouse3;
 
 class Control extends \Reports\reportControl
 {
@@ -10,7 +10,7 @@ class Control extends \Reports\reportControl
 
         $this->nameReport = "Расшифровка начислений по горячей  воде ";
         $this->extensionName = ".xlsx";
-        $this->descriptionReport = "Расшифровка начислений по горячей воде с выделенным теплоносителем и подогревом";
+        $this->descriptionReport = "Расшифровка начислений по горячей воде (Приложение № 7 к Соглашению № 40-юр  с 25.12.2020 г.) ";
         $this->manageTable = 'list_LS_decoding_reports';
 
 
@@ -27,7 +27,7 @@ class Control extends \Reports\reportControl
         $report = new \models\ReportOnPattern();
 
         $report->setExcelPatternPath(__DIR__);
-        $report->setExcelPatternName('decryption_hotWater_byHouse2.xlsx');
+        $report->setExcelPatternName('decryption_hotWater_byHouse3.xlsx');
         $report->setResultFileName($this->id_report);
         $report->setH($this->MODEL->getHeadArray());
         $report->setArray("t1",$data);
