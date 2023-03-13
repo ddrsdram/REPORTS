@@ -12,7 +12,7 @@ set_time_limit (0);
 session_start();
 header('Content-Type: text/html; charset=UTF-8');
 mb_http_output('UTF-8');
-
+/*
 require "spl_autoload_register.php";
 print "Start</br>";
 $conn = new \backend\Connection(\backend\Connection::GD);
@@ -44,5 +44,5 @@ $res = $data->fetch();
         unset($mail);
 
 }
-
+*/
 print " End</br>";
