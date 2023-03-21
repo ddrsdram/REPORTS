@@ -21,7 +21,7 @@ abstract class reportControl
     {
         /*
         // TODO: Implement __destruct() method.
-
+/*
         $conn = new \backend\Connection();
         $conn->table($this->manageTable)
             ->where('id_user',$this->MODEL->getUser())
