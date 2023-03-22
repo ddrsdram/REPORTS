@@ -16,14 +16,17 @@ class MODEL extends \Reports\reportModel
     {
         $conn = new \backend\Connection();
 
-
+        $returnArray = $this->getHeadArray();
         $data = $conn->table('View_REP_FIO_Certificate_1')
             ->where('id_user',$this->getUser())
             ->select();
 
         $transName = new \models\NameCaseLib\NCLNameCaseRu();
-        $returnArray = Array();
-        $returnArray = $data->fetch();
+
+        $res = $data->fetch();
+        foreach ($res as $key => $value){
+            $returnArray[$key] = $value;
+        }
 
         $FIO =  $transName->q(
             $this->mb_strToUpper_first($returnArray['fam'])." ".
@@ -41,21 +44,36 @@ class MODEL extends \Reports\reportModel
     {
         $conn = new \backend\Connection();
 
+        $headArray = $this->getHeadArray();
 
-        $data = $conn->table('View_REP_FIO_Certificate_All')
+
+        $conn->table('View_REP_FIO_Certificate_All')
             ->where('id_user',$this->getUser())
-            ->where('ORG',$this->getORG())
-            ->select();
+            ->where('ORG',$this->getORG());
+        //->where('id_doc',-1)
+        if (array_key_exists('ChildrenOff',$headArray)){
+            if ($headArray['ChildrenOff'] == '0')
+                $conn->where('years',18,'>=');
+        }
+
+        $data = $conn->select();
 
         $transName = new \models\NameCaseLib\NCLNameCaseRu();
 
         $returnArray = Array();
         while ($row = $data->fetch()){
 
-            $FIO =  $this->mb_strToUpper_first($row['fam'])." ".$this->mb_strToUpper_first($row['im'])." ".$this->mb_strToUpper_first($row['ot']);
+            $FIO =  $this->mb_strtoupper_first($row['fam'])." ".$this->mb_strtoupper_first($row['im'])." ".$this->mb_strtoupper_first($row['ot']);
             $row['FIO'] = $FIO;
-            $start_date=new \DateTime($row['birthday']);
-            $row['birthday'] = $start_date->format('d.m.Y');
+
+            $var = 'birthday';
+            $start_date=new \DateTime($row[$var]);
+            $row[$var] = $start_date->format('d.m.Y');
+
+            $var = 'data_create';
+            $start_date=new \DateTime($row[$var]);
+            $row[$var] = $start_date->format('d.m.Y');
+
             $returnArray[] = $row;
         }
 
