@@ -10,7 +10,7 @@ class Control extends \Reports\reportControl
 
 
 
-        $this->descriptionReport = "Выгрузка данных для Сбер банка + ГИС ЖКХ (ТСЖ)";
+        $this->descriptionReport = "Выгрузка данных для Сбер банка + ГИС ЖКХ";
         $this->manageTable = 'month_DAM_download_accruals_mail';
 
 
@@ -27,9 +27,10 @@ class Control extends \Reports\reportControl
     {
         $H = $this->MODEL->getHeadArray();
 
-        $this->extensionName = $this->MODEL->getExtensionForRegion($H['DataAccrualsForSBER_id_region']);
+        //$this->extensionName = $this->MODEL->getExtensionForRegion($H['DataAccrualsForSBER_id_region']);
+        //$this->extensionName = "txt";
 
-        $fileName = sprintf('%02d',date('m')).sprintf('%02d',date('y'));
+        $fileName = sprintf('%02d',date('d')).sprintf('%02d',date('m')).sprintf('%02d',date('y'));
         $fileName = "{$H['INN']}_{$H['RSCH']}_001_{$fileName}.txt";
         $this->MODEL->nameReport = $fileName ;
         $this->nameReport = $fileName;
