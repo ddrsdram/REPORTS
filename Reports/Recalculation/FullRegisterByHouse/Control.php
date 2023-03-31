@@ -8,9 +8,9 @@ class Control extends \Reports\reportControl
     {
         parent::__construct($id_report);
 
-        $this->nameReport = "Полный реестр спровок(перерасчетов) с группировкой по домам";
+        $this->nameReport = "Полный реестр справок(перерасчетов) с группировкой по домам";
         $this->extensionName = ".xlsx";
-        $this->descriptionReport = "Полный реестр спровок(перерасчетов) с группировкой по домам";
+        $this->descriptionReport = "Полный реестр справок(перерасчетов) с группировкой по домам";
         $this->manageTable = 'list_LS_reports_payments';
 
         $this->MODEL = new MODEL($this->id_report);
