@@ -7,9 +7,9 @@ class Control extends \Reports\reportControl
     function __construct($id_report)
     {
         parent::__construct($id_report);
-        $this->nameReport = "Начисления с разбивкой на сальдо, начислено, оплачено, спрвка, по каждому виду начисления";
+        $this->nameReport = "Начисления с разбивкой на сальдо, начислено, оплачено, справка, по каждому виду начисления";
         $this->extensionName = ".xlsx";
-        $this->descriptionReport = "Начисления с разбивкой на сальдо, начислено, оплачено, спрвка, по каждому виду начисления";
+        $this->descriptionReport = "Начисления с разбивкой на сальдо, начислено, оплачено, справка, по каждому виду начисления";
         $this->manageTable = 'list_LS_reports';
 
         $this->VIEW = new VIEW();
