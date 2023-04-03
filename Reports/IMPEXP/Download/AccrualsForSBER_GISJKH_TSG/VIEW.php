@@ -65,16 +65,16 @@ class VIEW extends \Reports\reportView
                 $street = $A['UL'];
                 $house = $A['DOM'];
                 $room = $A['KV'];
-                $roomForFIAS = $room == '' ? '' : ','.$room;
                 $FIO = $A['FIO'];
                 $LS = $A['LCHET'];
                 $mes = str_pad($A['MES'], 2, '0', STR_PAD_LEFT);;
                 $year = substr($A['GOD'],2,2);
                 $id_LS_in_GISJKH = $A['id_LS_in_GISJKH'];
-                $HOUSEGUID_FIAS = $A['HOUSEGUID_FIAS'];
+                $roomForFIAS = $room == '' ? '' : ','.$room; // если есть квартира то добавляем к номеру по фиас
+                $HOUSEGUID_FIAS = $A['HOUSEGUID_FIAS'] == '' ? '' : $A['HOUSEGUID_FIAS'].$roomForFIAS; // Если есть ФИАС то добавляем фиас с номером квартиры иначе пустое поле
                 echo
                 $kol++;
-                $str = "$LS;$id_LS_in_GISJKH;$HOUSEGUID_FIAS$roomForFIAS;$FIO;$name $street $house $room;$mes$year;$summa";
+                $str = "$LS;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$FIO;$name $street $house $room;$mes$year;$summa";
                 $str = iconv('UTF-8', 'windows-1251', $str);
                 fwrite($db, $str . chr(13) . chr(10));
             }
