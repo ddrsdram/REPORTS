@@ -72,7 +72,6 @@ class VIEW extends \Reports\reportView
                 $id_LS_in_GISJKH = $A['id_LS_in_GISJKH'];
                 $roomForFIAS = $room == '' ? '' : ','.$room; // если есть квартира то добавляем к номеру по фиас
                 $HOUSEGUID_FIAS = $A['HOUSEGUID_FIAS'] == '' ? '' : $A['HOUSEGUID_FIAS'].$roomForFIAS; // Если есть ФИАС то добавляем фиас с номером квартиры иначе пустое поле
-                echo
                 $kol++;
                 $str = "$LS;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$FIO;$name $street $house $room;$mes$year;$summa";
                 $str = iconv('UTF-8', 'windows-1251', $str);
