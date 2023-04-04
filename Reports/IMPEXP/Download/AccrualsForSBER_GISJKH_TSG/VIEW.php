@@ -47,12 +47,16 @@ class VIEW extends \Reports\reportView
 
             if ($summa <= 0){
                 $summa = $summa * -1;
-                $x = (int) round(($summa * 100 / $summaNach),0);
-                // если процент переплаты составляет более 10% то выставляем нулевую сумму
-                if ($x <= 10)
-                    $summa = $summaNach;
-                else
-                    $summa = 0;
+                if ($summaNach > 0){ // если сальдо меньше нуля а сумма начисления Больше нуля
+                    $x = (int) round(($summa * 100 / $summaNach),0);
+                    // если процент переплаты составляет более 10% то выставляем нулевую сумму
+                    if ($x <= 10)
+                        $summa = $summaNach;
+                    else
+                        $summa = 0;
+                }else{
+                    $summa = 0; // если сальдо меньше нуля и сумма начисления нулевая, то в файл ставим ноль
+                }
             }
 
 
