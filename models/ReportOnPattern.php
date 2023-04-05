@@ -291,6 +291,10 @@ class ReportOnPattern
 
 
     /**
+     * Вчисляет необходимость выведение строки группировки в отчет возвращая true
+     * при вхождении в метод по умолчанию считается что выводить строку группировки не нужно false
+     * стабатывает при полном окончании данных таблицы и при изменении грурппирующего поля
+     * при условии если выводить строку не нужно занимается аккумулированием данных по этой строке
      * @param $Array
      * @return bool
      */
@@ -307,6 +311,11 @@ class ReportOnPattern
 
 
         if ($this->{'initGroup'.$nameTable.$nameBlock} === true){
+            /*
+            если попадаем в обработку строки группировки первый раз
+            объявляем все инструкции строки группировки
+            и присваеваим первые значения
+            */
             $this->initGroup($Array);
         }else{
             $this->fillingInGroupFields($Array);
@@ -345,6 +354,9 @@ class ReportOnPattern
                     if ($aggregateFunction == 'MAX') {
                         if ($value < $table[$variable]) $value = $table[$variable];
                         $this->group[$nameTable][$nameBlock][$aggregateFunction][$variable] = $value;
+                    }
+                    if ($aggregateFunction == 'FSM') {
+                        $this->group[$nameTable][$nameBlock][$aggregateFunction][$variable]['rowEnd'] = $this->rowReport - 1;
                     }
                 }
             }
@@ -386,7 +398,12 @@ class ReportOnPattern
                 $value = $this->getCellValue($col,$row);
                 if ($value == null) $value = '';
                 $aggregateFunction = mb_substr($value,1,3);
-                $regexp = "/'[\w\s]+'/ui";
+                /*
+                 * \w - Любой символ, образующий "слово
+                 * \s - любой пробельный символ
+                 * \S - любой непробельный символ (Очень странно, что я его раньше не включил)
+                 */
+                $regexp = "/'[\w\s\S]+'/ui";
                 preg_match($regexp,$value,$arr);
                 if (count ($arr) != 0){
                     $variable = str_replace("'","",$arr[0]);
@@ -396,6 +413,14 @@ class ReportOnPattern
                         case 'MIN':
                         case 'MAX':
                             $this->group[$nameTable][$Array['nameBlock']][$aggregateFunction][$variable] = $rowData[$variable];
+                            break;
+                        case 'FSM':
+                            //Для формирования (суммы по группировке формулой) в случае отсутствия rowStart, добавляем его
+                            if ( ! array_key_exists('rowStart',(array)$this->group[$nameTable][$Array['nameBlock']][$aggregateFunction][$variable]))
+                                $this->group[$nameTable][$Array['nameBlock']][$aggregateFunction][$variable]['rowStart'] = $this->rowReport - 1;
+                            break;
+                        case 'FS0':
+                            $this->group[$nameTable][$Array['nameBlock']][$aggregateFunction][$variable] = "";
                             break;
                     }
                 }else{
@@ -424,13 +449,48 @@ class ReportOnPattern
             $nameTable = $Array['if'];
             $nameBlock = $Array['nameBlock'];
             if (is_array($this->group[$nameTable][$nameBlock])===true){
+                $this->group[$nameTable][$nameBlock]['rows'][$destRowStart] = true;
                 foreach ($this->group[$nameTable][$nameBlock] as $aggregateFunction => $arrayVariable) {
                     foreach ($arrayVariable as $variable => $value){
-                     //   print "\$this->\{$aggregateFunction.'_'.$nameTable\}[$variable] = $value </br>";
-                        ${$aggregateFunction.'_'.$nameTable}[$variable] = $value;
+                        switch ($aggregateFunction){
+                            case 'SUM':
+                            case 'MIN':
+                            case 'MAX':
+                                ${$aggregateFunction.'_'.$nameTable}[$variable] = $value;
+                                break;
+                            case 'FSM':
+                                ${$aggregateFunction.'_'.$nameTable}[$variable] = "=SUM({$variable}{$value['rowStart']}:{$variable}{$value['rowEnd']})";
+                                //Для формирования (суммы по группировке формулой) сбрасываем начальное значение группы (удаляя его из массива)
+                                unset($this->group[$nameTable][$nameBlock][$aggregateFunction][$variable]['rowStart']);
+                                break;
+                            case 'FS0':
+                                $patternSum = '';
+                                if (strpos($variable,':') !== false){
+                                    $varArr = explode(':',$variable);
+                                    $litter = $varArr[0];
+                                    $nameBlock1 = $varArr[1];
+                                    // формируем строку из строк отчета с ведущем двоеточием
+                                    foreach ($this->group[$nameTable][$nameBlock1]['rows'] as $key => $tmpVal){
+                                        $patternSum = $patternSum . ",$key";
+                                    }
+                                    //заменяем двееточие на букву столбца
+                                    $patternSum = str_replace(',',",$litter",$patternSum);
+                                    // удаляем первое двоеточние
+                                    $patternSum = substr($patternSum,1,strlen($patternSum));
+                                    //обертываем в фолрмулу
+                                    $patternSum = "=SUM($patternSum)";
+
+                                    ${$aggregateFunction.'_'.$nameTable}[$variable] = $patternSum;
+                                }else{
+                                    ${$aggregateFunction.'_'.$nameTable}[$variable] = '';
+                                }
+
+                                break;
+                        }
 
                     }
                 }
+
             }
         }
         if ($this->activTable != null)
@@ -624,7 +684,7 @@ class ReportOnPattern
 
 
     /**
-     * @return bool
+     * @return bool // согласно инструкций файла создаёт JSON строку и формирует из нёё массив инструкций
      */
     private function detectCommand()
     {
