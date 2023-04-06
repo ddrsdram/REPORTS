@@ -81,7 +81,7 @@ class VIEW extends \Reports\reportView
         $row ++;
         $this->insertValue($row,1,"Тел. приемная ".$this->DH['telephone1']);
         $row ++;
-        $this->insertValue($row,1,"Абонентский сектор ".$this->DH['telephone1']);
+        $this->insertValue($row,1,"Абонентский сектор ".$this->DH['telephone2']);
         $row ++;
         $this->insertValue($row,1,"№ лицензии  от ".$this->DH['OGRN']);
         $row ++;
