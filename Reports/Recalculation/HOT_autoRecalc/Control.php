@@ -31,7 +31,8 @@ class Control extends \Reports\reportControl
         $data = $this->MODEL->getDataTable($headArray);
 
         $report->setH($headArray);
-        $report->setArray("t1",$data);
+        $report->setArray("t1",Array());
+        $report->setArray("t2",$data);
 
         $report->run();
         //sleep(10);
