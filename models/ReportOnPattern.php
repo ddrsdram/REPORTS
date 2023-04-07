@@ -48,6 +48,7 @@ class ReportOnPattern
     private $printArea = false;
     private $defaultFontName = "Arial";
     private $defaultFontSize = 10;
+    private $showGridlines;
 
 
 
@@ -62,6 +63,7 @@ class ReportOnPattern
         $this->table = Array();
         $this->rowReport = 1;
         $this->sizePixelForQrCode = 200;
+        $this->showGridlines = true;
     }
     /**
      *
@@ -106,6 +108,11 @@ class ReportOnPattern
         $this->printArea = true;
     }
 
+
+    public function setShowGridlines(bool $status)
+    {
+        $this->showGridlines = $status;
+    }
 
     /**
      * @param string $defaultFontName
@@ -790,6 +797,8 @@ class ReportOnPattern
             $this->SheetResult = $this->spreadsheet->getActiveSheet();
             //$this->SheetResult->getDrawingCollection();
         }
+        $this->SheetResult->setShowGridlines($this->showGridlines);
+
     }
 
     /**
