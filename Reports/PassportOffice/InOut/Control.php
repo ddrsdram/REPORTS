@@ -27,19 +27,16 @@ class Control extends \Reports\reportControl
         $report = new \models\ReportOnPattern();
 
         $report->setExcelPatternPath(__DIR__);
+        $report->setShowGridlines(false);
         $report->setExcelPatternName('InOut.xlsx');
         $report->setResultFileName($this->id_report);
-
-        $report->setH($this->MODEL->getHeadArray());
+        $head = $this->MODEL->getHeadArray();
+        $report->setH($head);
         $report->setArray("t1",Array());
 
-        \models\ErrorLog::saveError("start", typeSaveMode: 'w+');
         $data = $this->MODEL->getDataTable();
-        //\models\ErrorLog::saveError($data);
         $report->setArray("t2",$data);
 
         $report->run();
-        //sleep(10);
-        // TODO: Implement run() method.
     }
 }
