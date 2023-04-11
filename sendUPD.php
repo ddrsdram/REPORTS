@@ -12,67 +12,44 @@ header('Content-Type: text/html; charset=UTF-8');
 mb_http_output('UTF-8');
 
 require "spl_autoload_register.php";
-print "Start</br>";
+print "Start".chr(10).chr(13);
+print count($argv).chr(10).chr(13);
+
+if (count($argv) == 1){
+    print "Структура запроса".chr(10).chr(13);
+    print "sendUPD.php <true-отпрвить письма только на мой ящик |false> [<ALL|2|3|4|5-номер организации> <207|208-порядковый номе месяца>]".chr(10).chr(13);
+    return;
+}
+if (($argv[1] == 'true') || ($argv[1] == 'false')){
+    $sendMailMyOnly =  $argv[1] == 'true' ? true : false;
+    print "Первый параметр верный =$sendMailMyOnly=".chr(10).chr(13);
+}else{
+    print "Не ВЕРНЫЙ первый параметр ".chr(10).chr(13);
+    return;
+}
+
+if ($argv[2] == 'ALL'){
+    $query = "SELECT        S_B_K_UniversalPaymentDocument.ORG, S_B_K_UniversalPaymentDocument.id_month
+                FROM            S_B_K_CurentMonth INNER JOIN
+                         S_B_K_UniversalPaymentDocument ON S_B_K_CurentMonth.id_month = S_B_K_UniversalPaymentDocument.id_month";
+}else{
+    $ORG = $argv[2];
+    $id_month = $argv[3];
+    $query = "SELECT        ORG, id_month
+                FROM            S_B_K_UniversalPaymentDocument
+                where ORG = $ORG AND
+                id_month = $id_month";
+
+}
 $conn = new \backend\Connection(\backend\Connection::GD);
-$conn_update = new \backend\Connection(\backend\Connection::GD);
+$data = $conn->complexQuery($query);
 
-$addDocument = false;
-$sendMailMyOnly = true;
-
-$data = $conn->complexQuery("
-SELECT        TOP (100) PERCENT dbo.S_B_K_UniversalPaymentDocument.ORG, dbo.S_B_K_UniversalPaymentDocument.id_month, dbo.S_B_K_UniversalPaymentDocument.id, dbo.S_B_K_UniversalPaymentDocument.invoicedAamount, 
-                         dbo.S_B_K_E_MailAddress.eMail, dbo.S_B_K_E_MailAddress.IO, dbo.ORG.name_AIS, dbo.ORG.Contract_num, dbo.ORG.Contract_date, dbo.users.id AS id_user
-FROM            dbo.S_B_K_UniversalPaymentDocument INNER JOIN
-                             (SELECT        TOP (100) PERCENT MAX(id_month) AS id_month, ORG
-                               FROM            dbo.S_B_K_UniversalPaymentDocument AS S_B_K_UniversalPaymentDocument_1
-                               GROUP BY ORG) AS S_B_K_CurentMonth ON dbo.S_B_K_UniversalPaymentDocument.id_month = S_B_K_CurentMonth.id_month AND dbo.S_B_K_UniversalPaymentDocument.ORG = S_B_K_CurentMonth.ORG INNER JOIN
-                         dbo.S_B_K_E_MailAddress ON dbo.S_B_K_UniversalPaymentDocument.ORG = dbo.S_B_K_E_MailAddress.ORG INNER JOIN
-                         dbo.ORG ON dbo.S_B_K_UniversalPaymentDocument.ORG = dbo.ORG.ORG INNER JOIN
-                         dbo.users ON dbo.ORG.ORG = dbo.users.ORG
-WHERE        (dbo.S_B_K_E_MailAddress.send_PRO = 1) AND (dbo.users.login = 'SERVER')
-");
-
+$class = new \models\SendUPD();
 while ($res = $data->fetch()){
-    $_SESSION['id_month0'] = $res['id_month'];
-    $_SESSION['ORG'] = $res['ORG'];
-    $_SESSION['id_user'] = $res['id_user'];
-    // Сформировать файл с по
-    $res['Contract_date'] = date('d.m.Y',strtotime($res['Contract_date']));
-    $res['invoicedAamount'] = round($res['invoicedAamount'],2);
-    $UPD = new \models\UPD();
-    $UPD->setIdUPD($res['id']);
-    $UPD->setORG($res['ORG']);
-    $UPD->setSum($res['invoicedAamount']);
-    $UPD->setNameAIS($res['name_AIS']);
-    $UPD->setContractNum($res['Contract_num']);
-    $UPD->setContractDate($res['Contract_date']);
-    $filename  = $UPD->create();
-    unlink(__DIR__."/download/Универсальный_передаточный_документ.pdf");
-    rename(__DIR__."/download/$filename",__DIR__."/download/Универсальный_передаточный_документ.pdf");
-
-
-    $fio =  $res['IO'];
-    $MSG = new \Views\HTML\Msg_sendUPD($fio);
-    $MSG->setSum($res['invoicedAamount']);
-    $MSG->setNameAIS($res['name_AIS']);
-    $MSG->setContractNum($res['Contract_num']);
-    $MSG->setContractDate($res['Contract_date']);
-    $message = $MSG->getMessage();
-    print $message;
-
-    $subject = "АИС СеДиАнт - Автоматезированное оповещение";
-
-    $mail = new \models\SendMail();
-    $mail->setAddress('tehnosd@mail.ru');
-    if ($sendMailMyOnly === false)
-        $mail->setAddress($res['eMail']);
-    $mail->setSubject($subject);
-    $mail->setContent($message);
-    $mail->setAttachFile(__DIR__."/download/Универсальный_передаточный_документ.pdf");
-    $mail->send();
-    unset($mail);
-
-
+    $class->setORG($res['ORG']);
+    $class->setIdMonth($res['id_month']);
+    $class->setSendMailMyOnly($sendMailMyOnly);
+    $class->send();
 }
 
 print "End</br>";

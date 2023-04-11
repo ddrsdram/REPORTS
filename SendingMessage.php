@@ -6,7 +6,7 @@
  * Time: 0:13
  */
 
-/*
+
 session_start();
 header('Content-Type: text/html; charset=UTF-8');
 mb_http_output('UTF-8');
@@ -41,4 +41,3 @@ while ($res = $data->fetch()){
 }
 
 print "End</br>";
-*/
