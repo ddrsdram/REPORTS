@@ -15,7 +15,7 @@ class ErrorLog
 
 //        $file = fopen($_SERVER['DOCUMENT_ROOT']."/".$fileName, $typeSaveMode);
         //$path = $_SESSION['__DIR__'];
-        $path = security::DOCUMENT_ROOT_PATH;
+        $path = security::DIR;
         $file = fopen("$path/log/".$fileName, $typeSaveMode);
 
         fwrite($file, $out . "\r\n");
