@@ -90,7 +90,7 @@ class VIEW extends \Reports\reportView
         if ($this->countOTH != 0) {
             $R = $this->gRow + 1;
             $f .= "+(L){$R}";
-            $this->insertRows($this->dataArrayOTH, "1.3", "Хозяйственные постройки по другой площади  ");
+            $this->insertRows($this->dataArrayOTH, "1.3", "Хозяйственные постройки по другой площади  ",col_4: 0);
         }
 
         $rowUP = $this->gRow + 1;
@@ -100,12 +100,15 @@ class VIEW extends \Reports\reportView
 
         for ($i = 4; $i<=$this->columnsPattern ; $i++){
             $L = Coordinate::stringFromColumnIndex($i);
+            $f = $this->modifyFormula($i,$f);
+
             $formula = str_replace("(L)",$L,$f);
+
             $this->insertValue($rowUP,$i ,$formula);
         }
     }
     
-    public function insertRows($dataArray,$nameCol_2,$nameCol_3,$dev = 0)
+    public function insertRows($dataArray,$nameCol_2,$nameCol_3,$dev = 0,$col_4 = 1)
     {
         $this->standatrdsRow = $this->gRow;
         $this->gRow ++ ;
@@ -121,7 +124,7 @@ class VIEW extends \Reports\reportView
                 $id_tarif = $DA['id_tarif'];
 
             }
-            $this->insertRow($DA,$dev);
+            $this->insertRow($DA,$dev,$col_4);
             $this->gRow ++;
         }
         $standardsTarifRows[] =  Array("row"=>$this->gRow,"name"=>"");
@@ -149,8 +152,9 @@ class VIEW extends \Reports\reportView
 
         for ($i = 4; $i<=$this->columnsPattern ; $i++){
             $L = Coordinate::stringFromColumnIndex($i);
-
+            $f = $this->modifyFormula($i,$f);
             $formula = str_replace("(L)",$L,$f);
+
             $this->insertValue($rowUP,$i ,$formula);
         }
         $col = 2;
@@ -159,6 +163,17 @@ class VIEW extends \Reports\reportView
         $col = 3;
         $this->insertValue($rowUP,$col ,$nameCol_3);
     }
+
+
+    private function modifyFormula($i,$f)
+    {
+        if (($i >= 12) && ($i <= 15)){ // если у нас итоги по тарифу, то их суммировать нельзя, берём только верхнюю часть
+            $f_arr = explode("+",$f);
+            $f = $f_arr[0];
+        }
+        return $f;
+    }
+
 
     private function totalRow($rowUP,$rowDOWN,$name)
     {
@@ -302,12 +317,12 @@ class VIEW extends \Reports\reportView
     }
 
 
-    private function insertRow($DA,$dev = 0)
+    private function insertRow($DA,$dev = 0,$col_4 = 1)
     {
 
 //        $this->insertValue($this->gRow,1 ,$DA['id_tarif']);
         $this->insertValue($this->gRow,3 ,$DA['name_street'].' '.$DA['house']);
-        $this->insertValue($this->gRow,4 ,1);
+        $this->insertValue($this->gRow,4 ,$col_4);
         $this->insertValue($this->gRow,5 ,"=G(0)+H(0)+I(0)",true);
         $this->insertValue($this->gRow,6 ,$DA['area_ur']);
         $this->insertValue($this->gRow,7 ,$DA['value4']);
@@ -323,7 +338,8 @@ class VIEW extends \Reports\reportView
         $this->insertValue($this->gRow,14,$DA['tarif2']);
         $this->insertValue($this->gRow,15,"=L(0)",true);
 
-        $this->insertValue($this->gRow,16,$DA['calc_method']);
+        //$this->insertValue($this->gRow,16,$DA['calc_method']);
+        $this->insertValue($this->gRow,16,"=K(0)*E(0)",true);
         $this->insertValue($this->gRow,17,$DA['value_ODPU']);
         $this->insertValue($this->gRow,18,"=Q(0)+P(0)",true);
         $this->insertValue($this->gRow,19,$DA['value_UR_IPU']);
