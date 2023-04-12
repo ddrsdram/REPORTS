@@ -75,7 +75,7 @@ class MODEL extends \Reports\reportModel
             }
 
             if (in_array($value['id_type_calculate'] , Array(8))){ // расчет ОДН
-                $val['value'] = $value['value1'] * $value['value3'];
+                $val['value'] = $value['value4'];
             }
 
             if ($value['id_type_accrual'] == 6){ //если отопление
