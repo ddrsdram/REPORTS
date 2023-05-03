@@ -1017,7 +1017,7 @@ class ReportOnPattern
     {
         $Obj_QR = new \models\QRcode\QR;
 
-        $Obj_QR->QR($data,QR_TypeField::String,QR_Level::QRLevel_M,2);
+        $Obj_QR->QR($data,QR_TypeField::String,QR_Level::QRLevel_Q,2);
         $Obj_QR->setSizeInPixels($this->sizePixelForQrCode);
         $gdImage = $Obj_QR->getQRCodeImage();
 
