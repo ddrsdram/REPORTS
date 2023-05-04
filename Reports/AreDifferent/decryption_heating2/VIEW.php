@@ -78,7 +78,7 @@ class VIEW extends \Reports\reportView
 
         $R = $this->gRow+1;
         $f = "=(L){$R}";
-        $this->insertRows($this->dataArrayST,"1.1","по нормат.потр.по строит.V домов, в т.ч.");
+        $this->insertRows($this->dataArrayST,"1.1","по нормат.потр.по строит.V домов, в т.ч.",formulaInToColumn_P: 1);
 
 
         if ($this->countDEV != 0){
@@ -108,7 +108,7 @@ class VIEW extends \Reports\reportView
         }
     }
     
-    public function insertRows($dataArray,$nameCol_2,$nameCol_3,$dev = 0,$col_4 = 1)
+    public function insertRows($dataArray,$nameCol_2,$nameCol_3,$dev = 0,$col_4 = 1,$formulaInToColumn_P = 0)
     {
         $this->standatrdsRow = $this->gRow;
         $this->gRow ++ ;
@@ -124,7 +124,7 @@ class VIEW extends \Reports\reportView
                 $id_tarif = $DA['id_tarif'];
 
             }
-            $this->insertRow($DA,$dev,$col_4);
+            $this->insertRow($DA,$dev,$col_4,$formulaInToColumn_P);
             $this->gRow ++;
         }
         $standardsTarifRows[] =  Array("row"=>$this->gRow,"name"=>"");
@@ -317,7 +317,7 @@ class VIEW extends \Reports\reportView
     }
 
 
-    private function insertRow($DA,$dev = 0,$col_4 = 1)
+    private function insertRow($DA,$dev = 0,$col_4 = 1,$formulaInToColumn_P = 0)
     {
 
 //        $this->insertValue($this->gRow,1 ,$DA['id_tarif']);
@@ -338,8 +338,12 @@ class VIEW extends \Reports\reportView
         $this->insertValue($this->gRow,14,$DA['tarif2']);
         $this->insertValue($this->gRow,15,"=L(0)",true);
 
-        //$this->insertValue($this->gRow,16,$DA['calc_method']);
-        $this->insertValue($this->gRow,16,"=K(0)*E(0)",true);
+        if ($formulaInToColumn_P == 0)
+            $this->insertValue($this->gRow,16,$DA['calc_method']);
+        else
+            $this->insertValue($this->gRow,16,"=K(0)*E(0)",true);
+
+
         $this->insertValue($this->gRow,17,$DA['value_ODPU']);
         $this->insertValue($this->gRow,18,"=Q(0)+P(0)",true);
         $this->insertValue($this->gRow,19,$DA['value_UR_IPU']);
