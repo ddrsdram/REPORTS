@@ -100,9 +100,9 @@ class VIEW extends \Reports\reportView
 
         for ($i = 4; $i<=$this->columnsPattern ; $i++){
             $L = Coordinate::stringFromColumnIndex($i);
-            $f = $this->modifyFormula($i,$f);
+            $f1 = $this->modifyFormula($i,$f);
 
-            $formula = str_replace("(L)",$L,$f);
+            $formula = str_replace("(L)",$L,$f1);
 
             $this->insertValue($rowUP,$i ,$formula);
         }
@@ -152,8 +152,8 @@ class VIEW extends \Reports\reportView
 
         for ($i = 4; $i<=$this->columnsPattern ; $i++){
             $L = Coordinate::stringFromColumnIndex($i);
-            $f = $this->modifyFormula($i,$f);
-            $formula = str_replace("(L)",$L,$f);
+            $f1 = $this->modifyFormula($i,$f);
+            $formula = str_replace("(L)",$L,$f1);
 
             $this->insertValue($rowUP,$i ,$formula);
         }
