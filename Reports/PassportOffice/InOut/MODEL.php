@@ -34,6 +34,8 @@ class MODEL extends \Reports\reportModel
         $conn = new \backend\Connection();
         $head_array = $this->getHeadArray();
         $id_month = $head_array['id_month0'];
+        $dateStart = $head_array['dateStart'];
+        $dateEnd = $head_array['dateEnd'];
         $returnArray = Array();
         $ORG = $this->getORG();
         $id_user = $this->getUser();
@@ -41,7 +43,8 @@ class MODEL extends \Reports\reportModel
         $data = $conn->table('View_REP_PassportOffice_InOut')
             ->where('ORG',$this->getORG())
             ->where('id_month',$id_month)
-            ->where('id_month_arrivals',$id_month)
+            ->where('date_reg_arrivals',$dateStart,'>=')
+            ->where('date_reg_arrivals',$dateEnd,'<=')
             ->orderBy('id_LS')
             ->select()->fetchAll();
         $this->arrivals = $this->transformArray($data);
@@ -50,7 +53,8 @@ class MODEL extends \Reports\reportModel
         $data = $conn->table('View_REP_PassportOffice_InOut')
             ->where('ORG',$ORG)
             ->where('id_month',$id_month)
-            ->where('id_month_departures',$id_month)
+            ->where('date_reg_departures',$dateStart,'>=')
+            ->where('date_reg_departures',$dateEnd,'<=')
             ->orderBy('id_LS')
             ->select()->fetchAll();
         $this->departures = $this->transformArray($data);
@@ -64,9 +68,14 @@ class MODEL extends \Reports\reportModel
             SELECT        id_month, ORG, id_LS, $id_user as id_user
                 FROM            View_REP_PassportOffice_InOut
                 WHERE (ORG = $ORG) AND (id_month = $id_month) AND 
-                ((id_month_arrivals = $id_month) OR (id_month_departures = $id_month))
+                (
+                    ((date_reg_arrivals>='$dateStart') AND (date_reg_arrivals<='$dateEnd'))
+                        OR
+                    ((date_reg_departures>='$dateStart') AND (date_reg_departures<='$dateEnd'))
+                )
                 group by ORG, id_month,id_LS
         ";
+        \models\ErrorLog::saveError($query,typeSaveMode: 'w+');
         $conn->complexQuery($query);
 
 
