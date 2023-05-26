@@ -31,10 +31,11 @@ class Control extends \Reports\reportControl
         $report->setExcelPatternName('PenaltyCalculate.xlsx');
         $report->setResultFileName($this->id_report);
 
+
         $report->setH($this->MODEL->getHeadArray());
         $report->setArray("t2",$data);
         $report->setArray("t1",Array());
-
+        $report->setShowGridlines(false);
         $report->run();
         //sleep(10);
         // TODO: Implement run() method.
