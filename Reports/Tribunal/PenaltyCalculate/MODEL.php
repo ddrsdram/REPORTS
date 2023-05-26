@@ -9,8 +9,22 @@
 namespace Reports\Tribunal\PenaltyCalculate;
 
 
+use DB\Table\recalculation_global_type_accrual;
+
 class MODEL extends \Reports\reportModel
 {
+    private $dateStart;
+
+
+
+    public function getHeadArray()
+    {
+        $data = parent::getHeadArray();
+        $data['dateStart'] = $this->dateStart;
+        return $data;
+    }
+
+
     public function getDataTable()
     {
 
@@ -33,6 +47,7 @@ class MODEL extends \Reports\reportModel
             if ($idOperation == -1 ) {// если у нас начала цикла то запоминаем первый элемент операции
                 $idOperation = $item['idOperation'];
                 $dateStart = $item['id_date'];
+                $this->dateStart = date('d.m.Y',strtotime($dateStart));
             }
 
             if ($idOperation != $item['idOperation']){
@@ -48,4 +63,8 @@ class MODEL extends \Reports\reportModel
         return $returnArray;
     }
 
+    public function getDateStart()
+    {
+        return $this->dateStart;
+    }
 }
