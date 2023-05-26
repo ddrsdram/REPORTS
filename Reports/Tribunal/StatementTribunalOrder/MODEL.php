@@ -80,7 +80,6 @@ class MODEL extends \Reports\reportModel
             ->where('id_user',$this->getUser())
             ->where('ORG',$this->getORG())
             ->select()->fetch();
-
         $addressHouse = ($data['address_region'] . ', ');
         $addressHouse .= ($data['status_street'] . ' ');
         $addressHouse .= $this->mb_strtoupper_first($data['name_street']) . ', ';
@@ -88,9 +87,11 @@ class MODEL extends \Reports\reportModel
         $addressHouse .= ('кв.' . $data['room']);
         $retArr['addressHouse'] = $addressHouse;
         $retArr['accrual'] = (float) $data['accrual'];
-        $retArr['GosPoshlina'] = (float) $data['GosPoshlina'];
+        $retArr['GosPoshlina'] = (float) str_replace(',','.',$retArr['GosPoshlina']);
+        $retArr['SumPenalty'] = (float) str_replace(',','.',$retArr['SumPenalty']);
+        $retArr['PenaltyOff'] = (int)$retArr['PenaltyOff'];
 
-        $retArr['summa'] = $retArr['accrual'] + $retArr['GosPoshlina'];
+        $retArr['summa'] = $retArr['accrual'] + $retArr['GosPoshlina'] + ($retArr['PenaltyOff'] * $retArr['SumPenalty']);
         $retArr['text'] = \models\Num2Str::getText($retArr['summa']);
 
         $dateTxt = "{$data['year_month_start']}-{$data['nom_month_start']}-01";
