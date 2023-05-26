@@ -54,6 +54,9 @@ class VIEW extends \Reports\reportView
         $this->addHeadText('Адрес:');
         $this->addHeadText($this->H['addressHouse']);
         $this->addHeadText("Сумма задолженности: ".$this->H['accrual']."р.",true);
+        if ($this->H['PenaltyOff'] == 1){
+            $this->addHeadText("Сумма пени " . $this->H['SumPenalty'] . " р.",true);
+        }
         $this->addHeadText("Госпошлина: ".$this->H['GosPoshlina']."р.",true);
 
         $this->addCenterText("");
@@ -75,13 +78,32 @@ class VIEW extends \Reports\reportView
         $this->addText("На основании изложенного и руководствуясь ст.309, 310, 539, 544 ГК РФ и ст. 3, 22,23, ГПК РФ, ст. 131,132,151 ГПК РФ, ст.ст.153-155, п.2 ст.69 ЖК РФ;");
         $this->addText("ПРОШУ:");
         $this->addText("Выдать судебный приказ о взыскании солидарно с  должников:");
-        $this->addText("- ".$this->H['FIOSumm']." проживающих по адресу: ".$this->H['addressHouse']." в пользу ".$this->H['name_organization_full']." (ИНН ".$this->H['INN']."/ КПП ".$this->H['KKP'].") Р/с ".$this->H['RSCH']." в ".$this->H['name_bank'].",  К/с ".$this->H['KSCH'].", БИК ".$this->H['BIK'].")  долг за содержание жилья  в размере ". $this->H['accrual'] ." руб.  и расходы по уплате государственной пошлины в размере ". $this->H['GosPoshlina'] ." руб., всего ". $this->H['summa'] ." (". $this->H['text'] .")");
+
+        $text = "- ".$this->H['FIOSumm']." проживающих по адресу: ".$this->H['addressHouse']." в пользу " ;
+        $text .= $this->H['name_organization_full'] ;
+        $text .= " (ИНН ".$this->H['INN'] ;
+        $text .= "/ КПП ".$this->H['KKP'] ;
+        $text .= ") Р/с ".$this->H['RSCH'] ;
+        $text .= " в ".$this->H['name_bank'] ;
+        $text .= ",  К/с ".$this->H['KSCH'] ;
+        $text .= ", БИК ".$this->H['BIK'] ;
+        $text .= ")  долг за содержание жилья  в размере " . $this->H['accrual'] . " руб.," ;
+        if ($this->H['PenaltyOff'] == 1){
+            $text .= " сумму пени " . $this->H['SumPenalty'] . " руб." ;
+        }
+        $text .= "  и расходы по уплате государственной пошлины в размере ". $this->H['GosPoshlina'] ." руб." ;
+        $text .= ", всего ". $this->H['summa'] ." (". $this->H['text'] .")";
+        $this->addText($text);
         $this->addText("");
 
         $this->addText("Приложение:",false,true);
         $this->addText("1.Квитанция об оплате госпошлины.",false,true);
         $this->addText("2.Справка из паспортного стола о составе семьи.",false,true);
         $this->addText("3.Копия лицевого счета (карточка собственника) должника с расчетом задолженности по оплате за содержание жилья.",false,true);
+        if ($this->H['PenaltyOff'] == 1){
+            $this->addText("4.Расчет пени.",false,true);
+        }
+
         $this->addText("");
         $this->addText("");
         $this->addText("Представитель ",false,true);
