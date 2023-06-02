@@ -30,10 +30,20 @@ class MODEL extends \Reports\reportModel
             $returnArray[$key] = $value;
         }
 
+
         $FIO =
             $this->mb_strtoupper_first($returnArray['fam'])." ".
             $this->mb_strtoupper_first($returnArray['im'])." ".
             $this->mb_strtoupper_first($returnArray['ot']);
+        $transName = new \models\NameCaseLib\NCLNameCaseRu();
+        $gender = $transName->genderDetect($FIO);
+        if ($gender == \models\NameCaseLib\NCL\NCL::$MAN){
+            $returnArray['MW'] = 'умерший';
+        }else{
+            $returnArray['MW'] = 'умершая';
+        }
+
+
         $returnArray['FIO'] = $FIO;
         $var = 'birthday';
         $start_date=new \DateTime($returnArray[$var]);
@@ -71,6 +81,7 @@ class MODEL extends \Reports\reportModel
                   id_FIO <>  {$this->data['id_FIO']} AND 
                   dateReg <= convert(date,'{$this->data['dateUnReg']}') AND 
                   (dateUnReg > convert(date,'{$this->data['dateUnReg']}') OR dateUnReg is null)
+            group by FIO.fam,FIO.im,FIO.ot,FIO.DOB
         ";
 \models\ErrorLog::saveError($query,typeSaveMode: 'w+');
 
@@ -80,7 +91,6 @@ class MODEL extends \Reports\reportModel
 
         $returnArray = Array();
         while ($row = $data->fetch()){
-            \models\ErrorLog::saveError($row);
             $FIO =  $this->mb_strtoupper_first($row['fam'])." ".$this->mb_strtoupper_first($row['im'])." ".$this->mb_strtoupper_first($row['ot']);
             $row['FIO'] = $FIO;
 
