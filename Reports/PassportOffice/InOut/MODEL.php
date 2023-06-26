@@ -42,21 +42,29 @@ class MODEL extends \Reports\reportModel
 
         $data = $conn->table('View_REP_PassportOffice_InOut')
             ->where('ORG',$this->getORG())
-            ->where('id_month',$id_month)
+           // ->where('id_month',$id_month)
             ->where('date_reg_arrivals',$dateStart,'>=')
             ->where('date_reg_arrivals',$dateEnd,'<=')
             ->orderBy('id_LS')
-            ->select()->fetchAll();
+            ->groupBy("ORG, status_street, name_street, house, room, fam, im, ot, DOB, name_type_arrivals, address_arrivals, dateReg, name_type_departures, address_departures, dateUnReg, id_FIO, id_LS, id, id_month_arrivals, 
+                         id_month_departures, day_unRegTrn, tmp, status, day_regTrn, date_reg_arrivals, date_reg_departures")
+            ->select("ORG, status_street, name_street, house, room, fam, im, ot, DOB, name_type_arrivals, address_arrivals, dateReg, name_type_departures, address_departures, dateUnReg, id_FIO, id_LS, id, id_month_arrivals, 
+                         id_month_departures, day_unRegTrn, tmp, status, day_regTrn, date_reg_arrivals, date_reg_departures")
+            ->fetchAll();
         $this->arrivals = $this->transformArray($data);
 
 
         $data = $conn->table('View_REP_PassportOffice_InOut')
             ->where('ORG',$ORG)
-            ->where('id_month',$id_month)
+          //  ->where('id_month',$id_month)
             ->where('date_reg_departures',$dateStart,'>=')
             ->where('date_reg_departures',$dateEnd,'<=')
             ->orderBy('id_LS')
-            ->select()->fetchAll();
+            ->groupBy("ORG, status_street, name_street, house, room, fam, im, ot, DOB, name_type_arrivals, address_arrivals, dateReg, name_type_departures, address_departures, dateUnReg, id_FIO, id_LS, id, id_month_arrivals, 
+                         id_month_departures, day_unRegTrn, tmp, status, day_regTrn, date_reg_arrivals, date_reg_departures")
+            ->select("ORG, status_street, name_street, house, room, fam, im, ot, DOB, name_type_arrivals, address_arrivals, dateReg, name_type_departures, address_departures, dateUnReg, id_FIO, id_LS, id, id_month_arrivals, 
+                         id_month_departures, day_unRegTrn, tmp, status, day_regTrn, date_reg_arrivals, date_reg_departures")
+            ->fetchAll();
         $this->departures = $this->transformArray($data);
 
 
@@ -75,7 +83,7 @@ class MODEL extends \Reports\reportModel
                 )
                 group by ORG, id_month,id_LS
         ";
-        \models\ErrorLog::saveError($query,typeSaveMode: 'w+');
+
         $conn->complexQuery($query);
 
 
