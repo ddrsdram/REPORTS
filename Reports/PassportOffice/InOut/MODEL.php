@@ -73,15 +73,15 @@ class MODEL extends \Reports\reportModel
             ->delete();
         $query = "
             insert into list_LS_PassportOffice
-            SELECT        id_month, ORG, id_LS, $id_user as id_user
+            SELECT        $id_month as id_month, ORG, id_LS, $id_user as id_user
                 FROM            View_REP_PassportOffice_InOut
-                WHERE (ORG = $ORG) AND (id_month = $id_month) AND 
+                WHERE (ORG = $ORG)  AND 
                 (
                     ((date_reg_arrivals>='$dateStart') AND (date_reg_arrivals<='$dateEnd'))
                         OR
                     ((date_reg_departures>='$dateStart') AND (date_reg_departures<='$dateEnd'))
                 )
-                group by ORG, id_month,id_LS
+                group by ORG, id_LS
         ";
 
         $conn->complexQuery($query);
