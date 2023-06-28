@@ -57,22 +57,20 @@ class MODEL extends \Reports\reportModel
         $data = $conn->table('View_REP_ADT_AreDifferent_table1')
             //->where("ORG",$ORG)
             ->where("id_user",$idUser)
-            ->orderBy('id_JEU')
+            ->orderBy('region,id_JEU')
             ->select();
+
         while ($res = $data->fetch()){
-            foreach ($res as $key => $value){
-                $this->JEU_Array[$res['id_JEU']] = $res;
-            }
+                $this->JEU_Array[$res['region']."_".$res['id_JEU']] = $res;
         }
+
         $data = $conn->table('View_REP_ADT_AreDifferent_typeAccruals')
             ->where("ORG",$ORG)
             ->where("id_user",$idUser)
-            ->orderBy('sorting')
+            ->orderBy('region,sorting')
             ->select();
         while ($res = $data->fetch()){
-            foreach ($res as $key => $value){
-                $this->JEU_Array[$res['id_JEU']]['data_type_accrual'][$res['id_type_accrual']] = $res;
-            }
+                $this->JEU_Array[$res['region']."_".$res['id_JEU']]['data_type_accrual'][$res['id_type_accrual']] = $res;
         }
         return $this->JEU_Array;
     }
