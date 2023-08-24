@@ -30,7 +30,7 @@ class Control extends \Reports\reportControl
         $report->setResultFileName($this->id_report);
         $report->setH($this->MODEL->getDataArrayHead());
         $report->setArray("t1",$this->MODEL->getDataArray());
-
+        $report->setShowGridlines(false);
         $report->run();
         //sleep(10);
         // TODO: Implement run() method.

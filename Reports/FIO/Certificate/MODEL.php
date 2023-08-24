@@ -65,6 +65,7 @@ class MODEL extends \Reports\reportModel
 
             $FIO =  $this->mb_strtoupper_first($row['fam'])." ".$this->mb_strtoupper_first($row['im'])." ".$this->mb_strtoupper_first($row['ot']);
             $row['FIO'] = $FIO;
+            $row['TmpREG'] = '';
 
             $var = 'birthday';
             $start_date=new \DateTime($row[$var]);
@@ -77,6 +78,44 @@ class MODEL extends \Reports\reportModel
             $returnArray[] = $row;
         }
 
+
+        // А теперь временно прописанные
+        $conn->table('View_REP_FIO_Certificate_All_TmpReg')
+            ->where('id_user',$this->getUser())
+            ->where('ORG',$this->getORG());
+        if (array_key_exists('ChildrenOff',$headArray)){
+            if ($headArray['ChildrenOff'] == '0')
+                $conn->where('years',18,'>=');
+        }
+
+        $data = $conn->select();
+        while ($row = $data->fetch()){
+
+
+            $FIO =  $this->mb_strtoupper_first($row['fam'])." ".$this->mb_strtoupper_first($row['im'])." ".$this->mb_strtoupper_first($row['ot']);
+
+
+            $var = 'dateReg';
+            $start_date=new \DateTime($row[$var]);
+            $dateReg = $start_date->format('d.m.Y');
+
+            $var = 'dateUnReg';
+            $start_date=new \DateTime($row[$var]);
+            $dateUnReg = $start_date->format('d.m.Y');
+
+            $row['FIO'] = $FIO;
+            $row['TmpREG'] = " временно с $dateReg по $dateUnReg";
+
+            $var = 'birthday';
+            $start_date=new \DateTime($row[$var]);
+            $row[$var] = $start_date->format('d.m.Y');
+
+            $var = 'data_create';
+            $start_date=new \DateTime($row[$var]);
+            $row[$var] = $start_date->format('d.m.Y');
+
+            $returnArray[] = $row;
+        }
         return $returnArray;
     }
 
