@@ -26,8 +26,6 @@ class MODEL extends \Reports\reportModel
             ->where('id_month',$id_month)
             ->where('ORG',$this->getORG())
             ->where('id_user',$this->getUser())
-            ->where('saldoStart',0 ,' > ')
-
             ->orderBy('name_street,house_int,room_int')
             ->select();
         $returnArray = $data->fetchAll();
