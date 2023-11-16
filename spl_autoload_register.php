@@ -26,6 +26,16 @@ spl_autoload_register(function ($class) {
                 if ($key == 0)
                     $value = "External\\" . $value;
                 break;
+            case "Liquetsoft":
+                $value = "External\\" . $value;
+                break;
+
+            case "Devmakis":
+                $value = str_replace("Devmakis","External",$value);
+                break;
+
+            case "SbWereWolf":
+                $value = "External\\" . $value;
         }
         $class = $class . "\\" . $value;
     }
