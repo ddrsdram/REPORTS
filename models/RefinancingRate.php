@@ -20,17 +20,8 @@ class RefinancingRate
 
     public function update()
     {
+        $this->deleteLastTenDays(); //Удалим последние 10 записей в базе (чтобы небыло косяка при запросе в СБРФ)
         $dateStart = $this->getOldDateIntoDB();
-        $deltaDay = (int) ($dateStart->diff($this->dateEnd)->format('%R%a') * 1);
-
-        if ($deltaDay <= 1) // если разница в днях 2 или меньше, значит в базе есть все ставки рефинансирования
-            return true; //по идее должны вывалиться без обработки
-
-        if ( ($deltaDay > 1) && ($deltaDay < 10) ){
-            $this->deleteLastTenDays(); //Удалим последние 10 записей в базе (чтобы небыло косяка при запросе в СБРФ)
-            $dateStart = $this->getOldDateIntoDB();
-        }
-
 
         $cbrf = new \Liquetsoft\CbrfService\CbrfDaily();
         try {
@@ -107,11 +98,34 @@ class RefinancingRate
 
     private function deleteLastTenDays()
     {
+        $this->deleteLastXDays(10);
+        while ($this->deleteWeekend()) {
+            $this->deleteLastXDays(1);
+        }
+        $this->deleteLastXDays(1);
+
+    }
+
+    private function deleteWeekend()
+    {
+        $conn = new \DB\Connect(\DB\Connect::GD);
+        $query="SELECT        TOP (1) weekend FROM refinancingRate ORDER BY id_date DESC";
+        $weekend = $conn->complexQuery($query)->fetchField('weekend');
+        print chr(10).chr(13);
+        print "===".$weekend.chr(10).chr(13);
+        if ($weekend == '1')
+            return true;
+        else
+            return false;
+
+    }
+    private function deleteLastXDays($x)
+    {
         $conn = new \DB\Connect(\DB\Connect::GD);
         $query="
         delete refinancingRate
             from (
-                SELECT        TOP (10) year, month, day
+                SELECT        TOP ($x) year, month, day
                 FROM            refinancingRate
                 ORDER BY id_date DESC
             ) as t
@@ -121,5 +135,6 @@ class RefinancingRate
             refinancingRate.day = t.day
         ";
         $conn->complexQuery($query);
+
     }
 }
