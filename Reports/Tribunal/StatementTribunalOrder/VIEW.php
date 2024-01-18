@@ -131,11 +131,12 @@ class VIEW extends \Reports\reportView
     {
         $this->section->addText(
             $text,
-            array('bold' => $bold,'spaceBefore' => 0,'spaceAfter' => 0),
-            array(
-                'indentation' => array('left' => 5000, 'right' => 0)
-            ,'spaceBefore' => 0,'spaceAfter' => 0
-            )
+            array('bold' => $bold,
+                'spaceBefore' => 0,
+                'spaceAfter' => 0),
+            array('indentation' => array('left' => 5000, 'right' => 0),
+                'spaceBefore' => 0,
+                'spaceAfter' => 0)
         );
 
     }
@@ -157,15 +158,21 @@ class VIEW extends \Reports\reportView
     {
         $style2 = array(
             'indentation' => array ('firstLine' => 700),
-            'align'=>'both'
+            'align'=>'both',
+            'LineSpacingRule' => 'exact',
+            'spacing' => 0,
+
         );
         if ($spaceAfterBefore_is0){
             $style2['spaceBefore'] = 0;
             $style2['spaceAfter'] = 0;
         }
+        if ($bold === false){
+            $bold = array('bold' => false);
+        }
         $this->section->addText(
             $text,
-            array('bold' => $bold),
+            $bold,
             $style2
         );
 
