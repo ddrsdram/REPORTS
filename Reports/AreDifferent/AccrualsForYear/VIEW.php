@@ -83,9 +83,8 @@ class VIEW extends \Reports\reportView
     public function bottomReport()
     {
         $bookkeeper_KVPL = $this->headSettings2['bookkeeper_KVPL'];
-        $name_organization = $this->headSettings2['name_organization'];
-        $this->insertValue(1,3,"Представитель $name_organization (по доверенности)  ________________________________ $bookkeeper_KVPL");
-        //
+        $post = $this->headSettings2['AccrualsForYear'];
+        $this->insertValue(1,3,"$post  ________________________________ $bookkeeper_KVPL");
     }
 
     /**
