@@ -145,6 +145,7 @@ class VIEW extends \Reports\reportView
 
         $textRun = $this->section->createTextRun($this->style2);
 
+
         $text = "1. Взыскать солидарно с ".$this->H['FIOSumm']." проживающих по адресу: ".$this->H['addressHouse']." в пользу " ;
         $text .= $this->H['name_organization_full'] ;
         $text .= " (ИНН ".$this->H['INN'] ;
@@ -155,20 +156,25 @@ class VIEW extends \Reports\reportView
         $text .= ", БИК ".$this->H['BIK'] ;
         $text .= ")  долг за содержание жилья и текущий ремонт за период с " . $this->H['dateStart'] . "г. по " . $this->H['dateEnd'] . "г. в сумме ";
         $textRun->addText($text,$this->SF_Norm);
-        $text =  $this->H['accrual'] . " рублей., ".$txt_accrual ;
+        $text =  $this->H['accrual'] . " рублей., " ;
 
-        $textRun->addText($text,$this->SF_bold);
-
+        $textRun->addText($text,$this->SF_Norm);
+        $sum = $this->H['accrual'];
         if ($this->H['PenaltyOff'] == 1){
             $textRun->addText(" сумму пени ",$this->SF_Norm);
-            $textRun->addText($this->H['SumPenalty'] . " руб.",$this->SF_bold);
+            $textRun->addText($this->H['SumPenalty'] . " руб.",$this->SF_Norm);
+            $sum = $sum+ $this->H['SumPenalty'];
         }
         $text = "  и расходы по уплате государственной пошлины в размере ";
         $textRun->addText($text,$this->SF_Norm);
-        $textRun->addText($this->H['GosPoshlina'] ." руб.",$this->SF_bold);
+        $textRun->addText($this->H['GosPoshlina'] ." руб.",$this->SF_Norm);
 
-        //$text .= ", всего ". $this->H['summa'] ." (". $this->H['text'] .")";
-        //$this->addText($text);
+        $sum = $sum+ $this->H['GosPoshlina'];
+        $txt_accrual = \models\Num2Str::getText($sum);
+
+        $textRun->addText(", всего ",$this->SF_Norm);
+        $text =  $this->H['summa'] ." (". $txt_accrual .")";
+        $textRun->addText($text,$this->SF_bold);
 
 
         $this->addText("2. Ходатайство: произвести зачет ранее уплаченной Истцом при подаче заявления о вынесении судебного приказа государственной пошлины в счет уплаты государственной пошлины за рассмотрение настоящего искового заявления к Ответчику о взыскании задолженности за содержание жилого помещения в связи с отменой судебного приказа (ст. 333.22 НК РФ).");
