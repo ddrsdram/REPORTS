@@ -101,7 +101,8 @@ class MODEL extends \Reports\reportModel
         $retArr['D_protocol'] = date('d.m.Y',strtotime($dataArr['D_protocol']));
 
         $retArr['accrual'] = (float) $data['accrual'];
-        $retArr['GosPoshlina'] = (float) str_replace(',','.',$retArr['GosPoshlina']);
+        $retArr['GosPoshlina'] = (float) str_replace(',','.',$retArr['GosPoshlina2']);
+
         $retArr['SumPenalty'] = (float) str_replace(',','.',$retArr['SumPenalty']);
         $retArr['PenaltyOff'] = (int)$retArr['PenaltyOff'];
 

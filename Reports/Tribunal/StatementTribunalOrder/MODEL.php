@@ -88,6 +88,7 @@ class MODEL extends \Reports\reportModel
         $retArr['addressHouse'] = $addressHouse;
         $retArr['accrual'] = (float) $data['accrual'];
         $retArr['GosPoshlina'] = (float) str_replace(',','.',$retArr['GosPoshlina']);
+        $retArr['GosPoshlina2'] = (float) str_replace(',','.',$retArr['GosPoshlina2']);
         $retArr['SumPenalty'] = (float) str_replace(',','.',$retArr['SumPenalty']);
         $retArr['PenaltyOff'] = (int)$retArr['PenaltyOff'];
 
