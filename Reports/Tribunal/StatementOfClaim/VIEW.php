@@ -47,7 +47,7 @@ class VIEW extends \Reports\reportView
 
         $this->SF_Yell = array(
             'bold'=>false,
-            'bgColor' => 'ffff99'
+            'bgColor' => 'ffffff'
         );
 
     }
@@ -196,7 +196,9 @@ class VIEW extends \Reports\reportView
         $this->addText("4. Расчет задолженности.",false,true);
         $this->addText("5. Начисления по лицевому счету  по оплате за содержание жилья и текущий ремонт на 1-м листе;",false,true);
         $this->addText("6.  Выписка из ЕГРЮЛ на 5-ти листах; ",false,true);
-        $this->addText("7. Копия протокола проведения общего собрания собственников в многоквартирном доме № 29, расположенному по адресу: г. Белово, пгт Бачатский, ул. 50 лет Октября (заочная форма) б/н от 01.03.2012г.;",false,true);
+
+
+        $this->addText("7. Копия протокола проведения общего собрания собственников в многоквартирном доме № {$this->H['house']}, расположенному по адресу: {$this->H['status_street']} {$this->H['name_street']} (заочная форма) {$this->H['N_protocol']} от {$this->H['D_protocol']}г.;",false,true);
         $this->addText("8. Справка с места жительства;",false,true);
         $this->addText("9. Решение СНД БГО от 30.05.2019 № 9/41-н  на 1-м  листе;",false,true);
         $this->addText("10. Решение СНД БГО от 30.07.2020  № 24/140-н на 1-м  листе;",false,true);

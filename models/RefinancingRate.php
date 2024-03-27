@@ -90,7 +90,7 @@ class RefinancingRate
     private function getOldDateIntoDB()
     {
         $conn = new \DB\Connect(\DB\Connect::GD);
-        $oldDate_string = $conn->complexQuery("SELECT MAX(id_date) AS oldDate FROM refinancingRate")->fetchField('oldDate');
+        $oldDate_string = $conn->complexQuery("SELECT isnull(MAX(id_date),'01.01.2020') AS oldDate FROM refinancingRate")->fetchField('oldDate');
         $oldDate = new \DateTimeImmutable("$oldDate_string");
 
         return  $oldDate;
