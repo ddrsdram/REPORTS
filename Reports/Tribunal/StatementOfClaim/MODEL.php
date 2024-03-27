@@ -93,7 +93,7 @@ class MODEL extends \Reports\reportModel
         //$retArr[''] = $data[''];
 
         $dataArr = $this->getProtocol($data['region'],$data['id_global_LS']);
-        $N_protocol="";
+        $N_protocol="б/н";
         if ($dataArr['N_protocol'] != '-1'){
             $N_protocol = " №".$dataArr['N_protocol'];
         }

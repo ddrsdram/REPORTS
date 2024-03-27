@@ -26,7 +26,7 @@ class scanAllReports
         print __METHOD__;
         print "</br>";
         $this->files = array();
-        $this->scanDirs($_SERVER['DOCUMENT_ROOT']."/Reports","/Reports","Reports");
+        $this->scanDirs(\properties\security::DOCUMENT_ROOT_PATH."/Reports","/Reports","Reports");
 
     }
 
