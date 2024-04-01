@@ -1,13 +1,14 @@
 <?php
+$t1['V_UL'] = 1;
+$R =1;
 
-function pingAddress($ip) {
-    $pingresult = exec("/bin/ping -n -c 1 $ip", $outcome, $status);
-    if (0 == $status) {
-        $status = "alive";
-    } else {
-        $status = "dead";
-    }
-    echo "The IP address, $ip, is  ".$status;
-}
+$val = "";
 
-pingAddress("13.14.0.195");
+
+
+$val1 =  '$t1["V_UL"] = 1 ? "=L$R-I$R" : ""';
+
+
+$command = '$val = '.$val1.';';
+eval($command);
+print $val;
