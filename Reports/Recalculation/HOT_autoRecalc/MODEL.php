@@ -20,7 +20,7 @@ class MODEL extends \Reports\reportModel
             ->where('ORG',$this->getORG())
             ->where('id_user',$this->getUser())
             ->where('id_month_create',$id_month)
-            ->orderBy("status_street,name_street,house_int,id_month")
+            ->orderBy("status_street,name_street,house_int,house,id_month")
             ->select()->fetchAll();
         $addres_house = false;
         $table = Array();
