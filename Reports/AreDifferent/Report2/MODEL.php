@@ -67,7 +67,7 @@ class MODEL extends \Reports\reportModel
         $data = $conn->table('View_REP_ADT_AreDifferent_typeAccruals')
             ->where("ORG",$ORG)
             ->where("id_user",$idUser)
-            ->orderBy('region,sorting')
+            ->orderBy('region,id_JEU,sorting')
             ->select();
         while ($res = $data->fetch()){
                 $this->JEU_Array[$res['region']."_".$res['id_JEU']]['data_type_accrual'][$res['id_type_accrual']] = $res;
