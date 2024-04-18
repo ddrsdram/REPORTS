@@ -42,8 +42,8 @@ class VIEW extends \Reports\reportView
         $kol = 0;
         foreach ($arr as $key => $A){
             // Это придумано для того, чтобы сравнивать с целочисленными занчениями, т.к. с сервера все приходит в тексте
-            $summa = (int) ($A['Saldo_END'] * 100);
-            $summaNach = $A['NACH'] * 100;
+            $summa = (int) (substr(str_replace('.','',$A['Saldo_END']),0,-2));
+            $summaNach = (int) (substr(str_replace('.','',$A['NACH']),0,-2));
 
             if ($summa <= 0){
                 $summa = $summa * -1;
