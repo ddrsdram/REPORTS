@@ -7,9 +7,9 @@ class Control extends \Reports\reportControl
     function __construct($id_report)
     {
         parent::__construct($id_report);
-        $this->nameReport = "Начислениея для судебного делопроизводства";
+        $this->nameReport = "Начисление для судебного делопроизводства";
         $this->extensionName = ".xlsx";
-        $this->descriptionReport = "Начислениея для судебного делопроизводства";
+        $this->descriptionReport = "Начисление для судебного делопроизводства";
         $this->manageTable = 'list_LS_reports';
 
         $this->MODEL = new MODEL($this->id_report);
