@@ -20,9 +20,10 @@ class RefinancingRate
 
     public function update()
     {
+        \models\ErrorLog::saveError('start','LogRefinancingRate.err');
         $this->deleteLastTenDays(); //Удалим последние 10 записей в базе (чтобы небыло косяка при запросе в СБРФ)
         $dateStart = $this->getOldDateIntoDB();
-
+        \models\ErrorLog::saveError($dateStart->format('d.m.Y'),'LogRefinancingRate.err');
         $cbrf = new \Liquetsoft\CbrfService\CbrfDaily();
         try {
             $keyRate = $cbrf->keyRate(
@@ -46,8 +47,8 @@ class RefinancingRate
             $keyRate_array[$date->format("d.m.Y")] = $object->getRate();
 
         }
-        \models\ErrorLog::saveError($keyRate);
-        \models\ErrorLog::saveError($keyRate_array);
+        \models\ErrorLog::saveError($keyRate,'LogRefinancingRate.err');
+        \models\ErrorLog::saveError($keyRate_array,'LogRefinancingRate.err');
 
         $dateStart = $dateStart->modify('+1 day');
 
@@ -78,9 +79,11 @@ class RefinancingRate
                     ->set('weekend',$weekend)
                     ->insert();
             }catch (\PDOException $e){}
+            \models\ErrorLog::saveError("END.",'LogRefinancingRate.err');
 
             $dateStart = $dateStart->modify('+1 day');
         }
+
         return true;
     }
 
