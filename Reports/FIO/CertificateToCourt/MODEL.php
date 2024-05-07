@@ -11,7 +11,7 @@ namespace Reports\FIO\CertificateToCourt;
 
 class MODEL extends \Reports\reportModel
 {
-
+    private $f_registration = "0";
 
     public function getDataArrayHead()
     {
@@ -42,6 +42,9 @@ class MODEL extends \Reports\reportModel
         $start_date=new \DateTime($returnArray[$var]);
         $returnArray[$var] = $start_date->format('d.m.Y');
 
+        $var = 'f_registration';
+        $returnArray[$var] = $this->f_registration;
+
         return $returnArray;
     }
 
@@ -66,8 +69,9 @@ class MODEL extends \Reports\reportModel
         $transName = new \models\NameCaseLib\NCLNameCaseRu();
 
         $returnArray = Array();
+        $this->f_registration = "0";
         while ($row = $data->fetch()){
-
+            $this->f_registration = "1";
             $FIO =  $this->mb_strtoupper_first($row['fam'])." ".$this->mb_strtoupper_first($row['im'])." ".$this->mb_strtoupper_first($row['ot']);
             $row['FIO'] = $FIO;
 
