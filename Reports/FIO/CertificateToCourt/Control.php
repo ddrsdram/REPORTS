@@ -28,8 +28,9 @@ class Control extends \Reports\reportControl
         $report->setExcelPatternPath(__DIR__);
         $report->setExcelPatternName('Certificate.xlsx');
         $report->setResultFileName($this->id_report);
+        $t1 = $this->MODEL->getDataArray();
         $report->setH($this->MODEL->getDataArrayHead());
-        $report->setArray("t1",$this->MODEL->getDataArray());
+        $report->setArray("t1",$t1);
 
         $report->run();
         //sleep(10);

@@ -22,7 +22,8 @@ class VIEW extends \Reports\reportView
 
     private $SheetPattern;
 
-
+    private $headSettings;
+    private $headSettings2;
 
     /**
      * @var \PhpOffice\PhpSpreadsheet\Spreadsheet
@@ -56,7 +57,9 @@ class VIEW extends \Reports\reportView
         //$this->openPatternFile();
         $this->defineSheetResult();
         //$this->copyHeadFile();
+        $this->headSettings2 = $this->headSettings;
         $this->headSettings =  current($this->data);
+
         $this->gRow = 0;
         $this->createHeadReport();
 
@@ -71,10 +74,17 @@ class VIEW extends \Reports\reportView
             $this->gRow += 1;
         }
 
+        $this->bottomReport();
        // $this->SheetResult->freezePane('C9');
         $this->saveFile();
     }
 
+    public function bottomReport()
+    {
+        $bookkeeper_KVPL = $this->headSettings2['bookkeeper_KVPL'];
+        $post = $this->headSettings2['AccrualsForYear'];
+        $this->insertValue(1,3,"$post  ________________________________ $bookkeeper_KVPL");
+    }
 
     /**
      * @param mixed $headSettings
