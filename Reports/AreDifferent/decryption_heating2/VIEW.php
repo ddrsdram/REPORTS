@@ -52,7 +52,9 @@ class VIEW extends \Reports\reportView
     private $standatrdsRow;
     private $devicesRow;
     private $standardsTarifRows = Array();
-    
+
+    private $roundColumn_K_11 = false;
+
     function __construct()
     {
         $path = $_SERVER['DOCUMENT_ROOT'];
@@ -78,18 +80,21 @@ class VIEW extends \Reports\reportView
 
         $R = $this->gRow+1;
         $f = "=(L){$R}";
+        $this->roundColumn_K_11 = true;
         $this->insertRows($this->dataArrayST,"1.1","по нормат.потр.по строит.V домов, в т.ч.",formulaInToColumn_P: 1);
 
 
         if ($this->countDEV != 0){
             $R = $this->gRow+1;
             $f .= "+(L){$R}";
+            $this->roundColumn_K_11 = false;
             $this->insertRows($this->dataArrayDEV,"1.2","по ОДПУи ИПУ",1);
         }
 
         if ($this->countOTH != 0) {
             $R = $this->gRow + 1;
             $f .= "+(L){$R}";
+            $this->roundColumn_K_11 = false;
             $this->insertRows($this->dataArrayOTH, "1.3", "Хозяйственные постройки по другой площади  ",col_4: 0);
         }
 
@@ -330,8 +335,13 @@ class VIEW extends \Reports\reportView
         $this->insertValue($this->gRow,9 ,$DA['value6']);
         if ($dev == 0)
             $this->insertValue($this->gRow,11,$DA['standardGkal']);
-        else
+        else{
+            $formula = "=T(0)/E(0)";
+            if ($this->roundColumn_K_11)
+                $formula = "=round(T(0)/E(0);4)";
             $this->insertValue($this->gRow,11,"=T(0)/E(0)",true);
+        }
+
 
         $this->insertValue($this->gRow,12,$DA['tarif3']);
         $this->insertValue($this->gRow,13,$DA['tarif1']);
