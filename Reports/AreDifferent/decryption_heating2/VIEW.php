@@ -64,7 +64,7 @@ class VIEW extends \Reports\reportView
 
     public function run()
     {
-        $this->gRow = 36;
+        $this->gRow = 23;
         $this->defineSheetResult();
         $this->insertData();
         $this->footerReport();
@@ -74,8 +74,8 @@ class VIEW extends \Reports\reportView
     private function insertData()
     {
 
-        $this->insertValue(4,2,"За {$this->DH['name_month']}");
-        $this->insertValue(5,2,$this->DH['name_organization']);
+        $this->insertValue(13,2,"За {$this->DH['name_month']}");
+        $this->insertValue(14,2,$this->DH['name_organization']);
         $rowUP = $this->gRow;
 
         $R = $this->gRow+1;
@@ -441,7 +441,7 @@ class VIEW extends \Reports\reportView
         $this->insertValue($this->gRow,36,'______________ М.Е.Праздников',false);
         $this->gRow ++;
         $this->gRow ++;
-        $this->insertValue($this->gRow,1,"Вед.специалист по ПСХ________________ Ю.Н.Вандакурова",false);
+        $this->insertValue($this->gRow,1,"Вед.специалист по ПСХ________________ Д.С.Карпенко",false);
         $this->insertValue($this->gRow,33,'Главный  инженер',false);
         $this->insertValue($this->gRow,36,'______________Н.П.Улаев',false);
 
