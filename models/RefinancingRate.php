@@ -11,7 +11,16 @@ class RefinancingRate
 {
     private $dateEnd;
 
-    
+    private $dateStart = false;
+
+    /**
+     * @param mixed $dateSart
+     */
+    public function setDateStart($dateStart): void
+    {
+        $this->dateStart = $dateStart;
+    }
+
     public function setDateEnd(string $dateEnd): void
     {
         $this->dateEnd = new \DateTimeImmutable($dateEnd);
@@ -20,10 +29,13 @@ class RefinancingRate
 
     public function update()
     {
-        \models\ErrorLog::saveError('start','LogRefinancingRate.err');
+        \models\ErrorLog::saveError('start','LogRefinancingRate.err','w+');
         $this->deleteLastTenDays(); //Удалим последние 10 записей в базе (чтобы небыло косяка при запросе в СБРФ)
         $dateStart = $this->getOldDateIntoDB();
         \models\ErrorLog::saveError($dateStart->format('d.m.Y'),'LogRefinancingRate.err');
+        \models\ErrorLog::saveError('-------------------','ErrRefinancingRate.err');
+        \models\ErrorLog::saveError($dateStart,'ErrRefinancingRate.err');
+        \models\ErrorLog::saveError($this->dateEnd,'ErrRefinancingRate.err');
         $cbrf = new \Liquetsoft\CbrfService\CbrfDaily();
         try {
             $keyRate = $cbrf->keyRate(
@@ -31,10 +43,7 @@ class RefinancingRate
                 $this->dateEnd
             );
         }catch (\Exception $e){
-            \models\ErrorLog::saveError('-------------------','ErrRefinancingRate.err');
-            \models\ErrorLog::saveError($dateStart,'ErrRefinancingRate.err');
-            \models\ErrorLog::saveError($this->dateEnd,'ErrRefinancingRate.err');
-            \models\ErrorLog::saveError('===================','ErrRefinancingRate.err');
+            \models\ErrorLog::saveError('Error','ErrRefinancingRate.err');
             \models\ErrorLog::saveError($e,'ErrRefinancingRate.err');
         }
 
@@ -93,7 +102,30 @@ class RefinancingRate
     private function getOldDateIntoDB()
     {
         $conn = new \DB\Connect(\DB\Connect::GD);
-        $oldDate_string = $conn->complexQuery("SELECT isnull(MAX(id_date),'01.01.2020') AS oldDate FROM refinancingRate")->fetchField('oldDate');
+
+        $query = "
+        SELECT        ISNULL(MIN(id_date),
+                             (
+							 SELECT        ISNULL(MAX(id_date), '01.01.2020') AS oldDate
+                               FROM            refinancingRate
+							   )
+					) AS oldDate
+                FROM            refinancingRate AS refinancingRate_1
+                WHERE        (rate IS NULL)
+        ";
+        $oldDate_string = $conn->complexQuery($query)->fetchField('oldDate');
+        /*
+         *  по умочанию дата начала поиска ставки рефинансирования должна вычисляться
+         * но мы можем задать этот диапазон в ручную
+         */
+        \models\ErrorLog::saveError("вычисленная дада начала поиска ставки рефинансирования - $oldDate_string",'LogRefinancingRate.err');
+
+        if ($this->dateStart !== false){
+
+            $oldDate_string = $this->dateStart;
+        }
+        \models\ErrorLog::saveError("итоговая дада начала поиска ставки рефинансирования - $oldDate_string",'LogRefinancingRate.err');
+
         $oldDate = new \DateTimeImmutable("$oldDate_string");
 
         return  $oldDate;
