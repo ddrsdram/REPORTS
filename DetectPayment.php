@@ -43,7 +43,7 @@ while ($res = $data->fetch()){
             $ORG = $vArr['ORG'];
             if (mb_strripos($text_SMS,$name_ORG,23,'utf-8')){
                 print "ORG = {$ORG} </br>";
-                $arrSum_1 = explode('RUB',$text_SMS);
+                $arrSum_1 = explode('р на р/c',$text_SMS);
                 $text_summ = $arrSum_1[0];
                 preg_match('/([0-9]+\.[0-9]+)/',$text_summ, $matches);
                 $summa = $matches[0];
