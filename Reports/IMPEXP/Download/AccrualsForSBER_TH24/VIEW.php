@@ -61,7 +61,7 @@ class VIEW extends \Reports\reportView
 
             $kol_Month = 0;
             if ($summaNach <> 0){
-                $kol_Month = (int) $summa / $summaNach;
+                $kol_Month = (int) round($summa / $summaNach,0);
                 if ($kol_Month < 0 ) $kol_Month = 0;
                 if ($kol_Month > 36 ) $kol_Month = 36;
             }
