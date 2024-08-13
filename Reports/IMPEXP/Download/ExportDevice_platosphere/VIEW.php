@@ -50,8 +50,9 @@ class VIEW extends \Reports\reportView
             $name_device = $A['name_device'];
             $name_type_accrual = $A['name_type_accrual'];
             $value_end = $A['value_end'];
+            $value_Max = $A['value_Max'];
 
-            $str = "$id_LS;$region, $status_street $name_street, $house$room;$id;$id_device_GISGKH;$name_device;$name_type_accrual;$value_end ";
+            $str = "$id_LS;$region, $status_street $name_street, $house$room;$id;$id_device_GISGKH;$name_device;$name_type_accrual;$value_end;$value_Max ";
             $str = iconv('UTF-8', 'windows-1251', $str);
             fwrite($db, $str . chr(13) . chr(10));
         }
