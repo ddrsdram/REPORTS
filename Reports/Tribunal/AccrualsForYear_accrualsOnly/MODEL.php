@@ -16,6 +16,7 @@ class MODEL extends \Reports\reportModel
     {
         $conn_head = new \backend\Connection();
         $conn_table = new \backend\Connection();
+        $conn_pay = new \backend\Connection();
         $ret = Array();
 
         $id_user = $this->getUser();
@@ -30,14 +31,24 @@ class MODEL extends \Reports\reportModel
             ->orderBy('id_month DESC,sorting')
             ->select();
 
+        $data_pay = $conn_pay->table('View_AFY_payments_viewer')
+            ->where('id_user',$id_user)
+            ->orderBy('id_month DESC, data_pay DESC')
+            ->select()
+        ;
+
         while ($value = $data_head->fetch()){
             $ret[$value['id_month']] = $value;
-
         }
+
         while ($value = $data_table->fetch()){
-            $val = Array();
             $ret[$value['id_month']]['table'][] = $value;
         }
+        while ($pay = $data_pay->fetch()){
+            $ret[$pay['id_month']]['pay'][] = $pay;
+        }
+        \models\ErrorLog::saveError($ret,typeSaveMode: "w+");
+
         return $ret;
     }
 

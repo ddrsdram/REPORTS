@@ -73,6 +73,12 @@ class VIEW extends \Reports\reportView
             $this->insertRow($data);
             $this->gRow += 1;
         }
+        $this->insertValue(1,1,"ИТОГО:");
+        $cells = Coordinate::stringFromColumnIndex(2).(string)($this->gRow+1 );
+        $SUMRANGE = 'B5:B'.$this->gRow;
+        $this->SheetResult->setCellValue($cells , "=SUM($SUMRANGE)");
+
+        $this->gRow += 1;
 
         $this->bottomReport();
        // $this->SheetResult->freezePane('C9');
@@ -221,12 +227,15 @@ class VIEW extends \Reports\reportView
 
         $col = 1;
 
-        $this->widthColumn($col,12.57,false);
+        if ($head) {
+            $this->widthColumn($col, 26.14, false);
+        }
+
         $this->insertValue($col,1,$DA['name_month']);
         $col ++;
 
         if ($head){
-            $this->widthColumn($col,12,false);
+            $this->widthColumn($col,18.14,false);
             $this->insertValue($col,1,'Основные итоги');
             $col ++;
             $this->setBorder(1,1,$col-1,1);
@@ -239,8 +248,8 @@ class VIEW extends \Reports\reportView
 
 
         $DT = $DA['table'];
-        $row = 1;
 
+        $row = 1;
 
         foreach ($DT as $key => $DR){
             $columns = $DR['detailing_general_report'];
@@ -266,14 +275,46 @@ class VIEW extends \Reports\reportView
                 $this->setBorder($col,1,$col + ($columns-1),1);
             }
 
-            $this->widthColumn($col,9.57);
+            $this->widthColumn($col,11.86);
             if ($columns>1)
-                $this->widthColumn($col+1,9.57);
+                $this->widthColumn($col+1,11.86);
             if ($columns>2)
-                $this->widthColumn($col+2,9.57);
+                $this->widthColumn($col+2,11.86);
 
             $col += $columns;
         }
+
+        if (array_key_exists('pay',$DA)){
+            $DP = $DA['pay'];
+            $rowPay = 0;
+            foreach ($DP as $key0 => $item){
+                $rowPay ++;
+                $this->insertValue(1,1 + $rowPay ,$item['full_name_month']." (Оплата)");
+                $this->insertValue(2,1 + $rowPay ,$item['total_Summ']);
+                $cells = Coordinate::stringFromColumnIndex(2).(string)($this->gRow + 1 + $rowPay);
+                $this->SheetResult->getStyle($cells)->applyFromArray(
+                            [
+                                'numberFormat' => [
+                                                'formatCode' => '# ##0;# ##0'
+                                                ]
+                            ]
+                    );
+                $summa = round($item['summa'],2);
+                $summa_ACT = round($item['summa_ACT'],2);
+                $data_pay = date("d.m.Y",strtotime($item['data_pay']));
+                $number_act = $item['number_act'];
+                $date_act = date("d.m.Y",strtotime($item['date_act']));
+                $text = "";
+                if ($summa_ACT != 0)
+                    $text = "Сумма:$summa от $data_pay зачтена в пользу Исп. Док №$number_act от $date_act ";
+                $this->insertValue(3,1 + $rowPay ,$text);
+                $this->setBorder(1,1 + $rowPay,3,1 + $rowPay);
+
+
+            }
+            $this->gRow = $this->gRow + $rowPay;
+        }
+
         if ($head){
 
             $this->SheetResult->getStyle("A4:BZ4")->getFont()->setSize(8)->setBold(1);
@@ -315,7 +356,7 @@ class VIEW extends \Reports\reportView
     {
         $cells = Coordinate::stringFromColumnIndex($column);
         $this->SheetResult->getColumnDimension($cells)->setWidth($width);
-        $this->SheetResult->getColumnDimension($cells)->setAutoSize($autoSize);
+        //$this->SheetResult->getColumnDimension($cells)->setAutoSize($autoSize);
     }
     private function heightRow($row,$height,$autoSize = false)
     {
