@@ -28,6 +28,7 @@ class MODEL extends \Reports\reportModel
 
         $data_table = $conn_table->table('View_AFY_accruals_viewer')
             ->where('id_user',$id_user)
+            ->where('penaltyOff',"0")
             ->orderBy('id_month DESC,sorting')
             ->select();
 
@@ -47,7 +48,6 @@ class MODEL extends \Reports\reportModel
         while ($pay = $data_pay->fetch()){
             $ret[$pay['id_month']]['pay'][] = $pay;
         }
-        \models\ErrorLog::saveError($ret,typeSaveMode: "w+");
 
         return $ret;
     }
@@ -57,6 +57,7 @@ class MODEL extends \Reports\reportModel
         $conn = new \backend\Connection();
         return  $conn->table('View_AFY_usedTypeAccrual_viewer')
             ->where('id_user',$this->getUser())
+            ->where('penaltyOff',"0")
             ->where('ORG',$this->getORG())
             ->orderBy('sorting')
             ->select("name,detailing_general_report");
