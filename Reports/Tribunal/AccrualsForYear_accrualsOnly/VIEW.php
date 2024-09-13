@@ -38,7 +38,7 @@ class VIEW extends \Reports\reportView
     private $excelPatternName;
 
     private $gRow;
-
+    private $gCol;
     /**
      * @var \backend\Connection;
      */
@@ -74,11 +74,19 @@ class VIEW extends \Reports\reportView
             $this->gRow += 1;
         }
         $this->insertValue(1,1,"ИТОГО:");
-        $cells = Coordinate::stringFromColumnIndex(2).(string)($this->gRow+1 );
-        $SUMRANGE = 'B5:B'.$this->gRow;
+        $cells = Coordinate::stringFromColumnIndex(3).(string)($this->gRow+1 );
+        $r = $this->gRow + 1;
+        $this->SheetResult->getStyle($cells)->getAlignment()->setHorizontal("left");
+
+        $SUMRANGE = 'c5:c'.$this->gRow;
         $this->SheetResult->setCellValue($cells , "=SUM($SUMRANGE)");
 
+        $this->mergeCel(1,1,2,1);
+        $this->mergeCel(3,1,$this->gCol,1);
         $this->gRow += 1;
+        $this->setBorder(1,4,$this->gCol,$this->gRow);
+
+
 
         $this->bottomReport();
        // $this->SheetResult->freezePane('C9');
@@ -133,7 +141,7 @@ class VIEW extends \Reports\reportView
                 */
         $this->SheetResult = $this->spreadsheet->getActiveSheet();
 
-        $this->SheetResult->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+        $this->SheetResult->getPageSetup()->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_PORTRAIT);
         $this->SheetResult->getPageSetup()->setFitToWidth(1);
         $this->SheetResult->getPageSetup()->setFitToHeight(0);
         $this->SheetResult->getPageMargins()->setTop(0.4);
@@ -228,22 +236,24 @@ class VIEW extends \Reports\reportView
         $col = 1;
 
         if ($head) {
-            $this->widthColumn($col, 26.14, false);
+            $this->widthColumn($col, 13.14, false);
         }
 
         $this->insertValue($col,1,$DA['name_month']);
         $col ++;
 
         if ($head){
-            $this->widthColumn($col,18.14,false);
+            $this->widthColumn($col,11,false);
             $this->insertValue($col,1,'Основные итоги');
+            $this->mergeCel($col,1,$col +1,1);
             $col ++;
-            $this->setBorder(1,1,$col-1,1);
+            $col ++;
             $this->heightRow($this->gRow+1,94.5);
         }else{
-            $this->insertValue($col,1,$DA['accruals']);
+            $this->insertValue($col,1,"Начисление");
             $col ++;
-            $this->setBorder(1,1,$col-1,1);
+            $colTotal = $col;
+            $col ++;
         }
 
 
@@ -258,12 +268,11 @@ class VIEW extends \Reports\reportView
                 $this->mergeCel($col,1,$col + ($columns-1),1);
                 $this->insertValue($col,$row,$DR['name']);
 
-                $this->setBorder($col,1,$col + ($columns-1),1);
             }else{
                 if ($columns == 1){
-                    $this->insertValue($col,$row,$DR['summa']);
+                    $this->insertValue($col,$row,$DR['summa'] + $DR['recalculate']);
                 }else{
-                    $this->insertValue($col,$row,$DR['summa1']);
+                    $this->insertValue($col,$row,$DR['summa1'] + $DR['recalculate']);
 
                 }
                 if ($columns>1){
@@ -272,16 +281,27 @@ class VIEW extends \Reports\reportView
                 if ($columns>2){
                     $this->insertValue($col+2,$row,$DR['summa3']);
                 }
-                $this->setBorder($col,1,$col + ($columns-1),1);
             }
 
-            $this->widthColumn($col,11.86);
+            $this->widthColumn($col,10);
             if ($columns>1)
-                $this->widthColumn($col+1,11.86);
+                $this->widthColumn($col+1,10);
             if ($columns>2)
-                $this->widthColumn($col+2,11.86);
+                $this->widthColumn($col+2,10);
 
             $col += $columns;
+            if ($head) {
+                $this->widthColumn($col, 10);
+                $this->insertValue($col,1,"Справочно");
+            }
+        }
+
+        if (!$head){
+
+            $C1 = Coordinate::stringFromColumnIndex($col);
+            $R1 = $this->gRow+1;
+            $SUMRANGE = "D{$R1}:{$C1}{$R1}";
+            $this->SheetResult->setCellValue("C{$R1}" , "=SUM($SUMRANGE)");
         }
 
         if (array_key_exists('pay',$DA)){
@@ -289,16 +309,21 @@ class VIEW extends \Reports\reportView
             $rowPay = 0;
             foreach ($DP as $key0 => $item){
                 $rowPay ++;
-                $this->insertValue(1,1 + $rowPay ,$item['full_name_month']." (Оплата)");
-                $this->insertValue(2,1 + $rowPay ,$item['total_Summ']);
-                $cells = Coordinate::stringFromColumnIndex(2).(string)($this->gRow + 1 + $rowPay);
+                $col1 = 1;
+                $this->insertValue($col1,1 + $rowPay ,$item['full_name_month']);
+                $col1 ++;
+                $this->insertValue($col1,1 + $rowPay ,"Оплата");
+                $col1 ++;
+                $this->insertValue($col1,1 + $rowPay ,$item['total_Summ']);
+                $cells = Coordinate::stringFromColumnIndex($col1).(string)($this->gRow + 1 + $rowPay);
                 $this->SheetResult->getStyle($cells)->applyFromArray(
                             [
                                 'numberFormat' => [
-                                                'formatCode' => '# ##0;# ##0'
+                                                'formatCode' => '# ##0.00;# ##0.00'
                                                 ]
                             ]
                     );
+
                 $summa = round($item['summa'],2);
                 $summa_ACT = round($item['summa_ACT'],2);
                 $data_pay = date("d.m.Y",strtotime($item['data_pay']));
@@ -306,27 +331,31 @@ class VIEW extends \Reports\reportView
                 $date_act = date("d.m.Y",strtotime($item['date_act']));
                 $text = "";
                 if ($summa_ACT != 0)
-                    $text = "Сумма:$summa от $data_pay зачтена в пользу Исп. Док №$number_act от $date_act ";
-                $this->insertValue(3,1 + $rowPay ,$text);
-                $this->setBorder(1,1 + $rowPay,3,1 + $rowPay);
+                    $text = "$summa от $data_pay. ($summa_ACT в счет исп.док.№$number_act от $date_act)";
+                $this->insertValue($col,1 + $rowPay ,$text);
+                //$this->setBorder(1,1 + $rowPay,3,1 + $rowPay);
 
 
             }
+            $r = $this->gRow + 1;
+            $this->SheetResult->getStyle("A$r")->getAlignment()->setVertical("top");
+            $this->mergeCel(1,1,1,1 + $rowPay);
             $this->gRow = $this->gRow + $rowPay;
         }
 
         if ($head){
+            $C = Coordinate::stringFromColumnIndex($col-1);
 
             $this->SheetResult->getStyle("A4:BZ4")->getFont()->setSize(8)->setBold(1);
-            $this->SheetResult->getStyle("A4:G4")->getAlignment()->setVertical("center");
+            $this->SheetResult->getStyle("A4:BZ4")->getAlignment()->setVertical("center");
 
             $this->SheetResult->getStyle("A4:BZ4")->getAlignment()->setHorizontal("center");
 
-            $this->SheetResult->getStyle("B4:BZ4")->getAlignment()->setTextRotation(90);
-            $this->SheetResult->getStyle("B4:BZ4")->getAlignment()->setWrapText(true);
-            $this->SheetResult->getStyle("B4:BZ4")->getAlignment()->setVertical("bottom");
+            $this->SheetResult->getStyle("D4:{$C}4")->getAlignment()->setTextRotation(90);
+            $this->SheetResult->getStyle("D4:{$C}4")->getAlignment()->setWrapText(true);
+            $this->SheetResult->getStyle("D4:{$C}4")->getAlignment()->setVertical("bottom");
         }
-
+        $this->gCol = $col;
     }
 
     /**
@@ -356,7 +385,7 @@ class VIEW extends \Reports\reportView
     {
         $cells = Coordinate::stringFromColumnIndex($column);
         $this->SheetResult->getColumnDimension($cells)->setWidth($width);
-        //$this->SheetResult->getColumnDimension($cells)->setAutoSize($autoSize);
+        $this->SheetResult->getColumnDimension($cells)->setAutoSize($autoSize);
     }
     private function heightRow($row,$height,$autoSize = false)
     {
@@ -366,8 +395,8 @@ class VIEW extends \Reports\reportView
     }
     private function setBorder($cStart,$rStart,$cEnd,$rEnd)
     {
-        $range1 = Coordinate::stringFromColumnIndex($cStart) . (string)($this->gRow+$rStart);
-        $range2 = Coordinate::stringFromColumnIndex($cEnd) . (string)($this->gRow+$rEnd);
+        $range1 = Coordinate::stringFromColumnIndex($cStart) . (string)($rStart);
+        $range2 = Coordinate::stringFromColumnIndex($cEnd) . (string)($rEnd);
         $styleThinBlackBorderOutline = array(
             'borders' => array(
                 'outline' => array(
