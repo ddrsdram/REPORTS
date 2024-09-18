@@ -73,7 +73,8 @@ class VIEW extends \Reports\reportView
 
                 $summa = str_replace('.', ",", $summa);
                 $name = $A['name']; // регион
-                $street = "{$A['status_street']}. {$A['UL']}"; //status_street
+                $status_street = "{$A['status_street']}.";
+                $street = $A['UL']; //status_street
                 $house = $A['DOM'];
                 $room = $A['KV'];
                 $FIO = $A['FIO'];
@@ -84,7 +85,7 @@ class VIEW extends \Reports\reportView
                 $roomForFIAS = $room == '' ? '' : ','.$room; // если есть квартира то добавляем к номеру по фиас
                 $HOUSEGUID_FIAS = $A['HOUSEGUID_FIAS'] == '' ? '' : $A['HOUSEGUID_FIAS'].$roomForFIAS; // Если есть ФИАС то добавляем фиас с номером квартиры иначе пустое поле
                 $kol++;
-                $str = "$LS;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$FIO;$name $street $house $room;$mes$year;$summa;$kol_Month";
+                $str = "$LS;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$FIO;$name, $status_street $street, $house, $room;$mes$year;$summa;$kol_Month";
                 $str = iconv('UTF-8', 'windows-1251', $str);
                 fwrite($db, $str . chr(13) . chr(10));
             }
