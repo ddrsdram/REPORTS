@@ -73,7 +73,7 @@ class VIEW extends \Reports\reportView
 
                 $summa = str_replace('.', ",", $summa);
                 $name = $A['name']; // регион
-                $street = $A['UL'];
+                $street = "{$A['status_street']}. {$A['UL']}"; //status_street
                 $house = $A['DOM'];
                 $room = $A['KV'];
                 $FIO = $A['FIO'];
