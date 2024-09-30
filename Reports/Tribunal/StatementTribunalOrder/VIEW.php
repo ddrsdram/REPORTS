@@ -162,7 +162,9 @@ class VIEW extends \Reports\reportView
         $this->addText("5.	Копия свидетельства о постановке на налоговый учет ",false,true);
         $this->addText("6.	Копия Устава.",false,true);
         $this->addText("7.	Квитанция об оплате госпошлины.",false,true);
-        $this->addText("8.	Копия доверенности на представителя ",false,true);
+        $this->addText("8.	Копия почтовой квитанции о вручении заявления о выдачи судебного приказа.",false,true);
+
+        $this->addText("9.	Копия доверенности на представителя ",false,true);
         if ($this->H['PenaltyOff'] == 1){
             $this->addText("9.	Расчет пени.",false,true);
         }
