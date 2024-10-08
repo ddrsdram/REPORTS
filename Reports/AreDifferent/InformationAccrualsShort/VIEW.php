@@ -290,7 +290,8 @@ class VIEW extends \Reports\reportView
         $this->widthColumn($col,30);
         $col ++;
 
-//        $this->insertValue($col,$dataArray['saldo_start']);
+        //        $this->insertValue($col,'Сальдо н аначало');
+        $this->insertValue($col,$dataArray['saldo_start']);
         $this->widthColumn($col,30);
         $col ++;
 
