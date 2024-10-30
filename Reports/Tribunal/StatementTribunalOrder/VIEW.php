@@ -16,7 +16,7 @@ class VIEW extends \Reports\reportView
     private $SF_Yell = Array();
     private $style2 = Array();
     private $style3 = Array();
-
+    private $countOfHuman;
     const Left = 2000;
     function init()
     {
@@ -68,6 +68,12 @@ class VIEW extends \Reports\reportView
 
     public function FillingInData()
     {
+
+        $settings = $this->MODEL->getSettingsTribunal();
+        $AJusticeOfThePeace = $settings['AJusticeOfThePeace'];
+        $Signatory = $settings['Signatory'];
+
+
         $this->objectDoc->setDefaultFontName('Times New Roman');
         $this->objectDoc->setDefaultFontSize(12);
 
@@ -78,7 +84,7 @@ class VIEW extends \Reports\reportView
             'marginBottom' => 900,
             );          //отступ снизу
         $this->section = $this->objectDoc->addSection($sectionStyle);
-        $this->addHeadText('Мировому судье судебного участка № 2 Беловского городского судебного района Кемеровской области',true);
+        $this->addHeadText($AJusticeOfThePeace,true);
 //        $this->addHeadText('',true);
         $this->addHeadText('Заявитель:',true);
         $this->addHeadText($this->H['name_organization']);
@@ -93,8 +99,6 @@ class VIEW extends \Reports\reportView
         }
         $this->addHeadText("Госпошлина: ".$this->H['GosPoshlina']."р.",true);
 
-        $this->addCenterText("");
-        $this->addCenterText("");
         $this->addCenterText("");
         $this->addCenterText("Заявление о выдачи судебного приказа");
         $this->addCenterText('о взыскании задолженности за жилищные услуги');
@@ -123,10 +127,16 @@ class VIEW extends \Reports\reportView
         $this->addText("Однако, должником были нарушены ст.ст. 153, 154, 155 Жилищного кодекса РФ., п.28 Правил и условия договора в ".
             "части своевременного внесения платы за оказанные им услуги. ",false,true);
 
-        $this->addText("В результате, по данным {$this->H['name_organization']}, за должником по состоянию на ".
-            "{$this->H['dateEnd']} года числится задолженность за оказанные услуги и выполненные работы в размере {$this->H['accrual']} р.");
 
-        $this->addText("Период образования задолженности: {$this->H['dateStart']} года по {$this->H['dateEnd']} года",false,true);
+        $textRun = $this->section->createTextRun($this->style2);
+        $textRun->addText("В результате, по данным {$this->H['name_organization']}, за должником по состоянию на ",$this->SF_Norm);
+        $textRun->addText("{$this->H['dateEnd']} года числится",$this->SF_Norm);
+        $textRun->addText(" задолженность",$this->SF_bold);
+        $textRun->addText(" за оказанные услуги и выполненные работы",$this->SF_Norm);
+        $textRun->addText(" в размере {$this->H['accrual']} руб.",$this->SF_bold);
+
+
+        $this->addText("Период образования задолженности: {$this->H['dateStart']} года по {$this->H['dateEnd']} года",true,true);
         $this->addText("В соответствии с п.14. ст. 155 ЖК РФ лица, несвоевременно и (или) не полностью внесшие плату за жилое помещение и коммунальные ".
             "услуги, обязаны уплатить кредитору пени в размере одной трехсотой ставки рефинансирования Центрального банка Российской Федерации, ".
             "действующей на день фактической оплаты, от не выплаченной в срок суммы за каждый день просрочки начиная с тридцать первого дня, ".
@@ -136,13 +146,14 @@ class VIEW extends \Reports\reportView
             "по день фактической оплаты пени уплачиваются в размере одной стотридцатой ставки рефинансирования Центрального банка Российской Федерации, ".
             "действующей на день фактической оплаты, от не выплаченной в срок суммы за каждый день просрочки. Увеличение установленных настоящей частью ".
             "размеров пеней не допускается.",false,true);
-        $this->addText("Сумма пени за период с {$this->H['dateStart']} по {$this->H['dateEnd']} гг составляет  {$this->H['SumPenalty']} руб.",false,true);
+        $this->addText("Сумма пени за период с {$this->H['dateStartPenalty']} по {$this->H['dateEnd']} гг составляет  {$this->H['SumPenalty']} руб.",true,true);
         $this->addText("На основании вышеизложенного и руководствуясь ст.ст. 153, 154, 155 ЖК РФ, ст.ст. 779, 782, 1102, 1105 ГК РФ, ст.ст. 122-124 ГПК РФ.",false,true);
 
-        $this->addText("");
-
         $this->addText("ПРОШУ:",true,true);
-        $this->addText("Выдать судебный приказ на солидарное взыскание с  в пользу {$this->H['name_organization_full']}:",false,true);
+        $solidarity = "солидарное";
+        if ($this->countOfHuman == 1) // если один человек в приказе то не используем слово "солиданое" в сочитании "солиданое взыскание"
+            $solidarity = "";
+        $this->addText("Выдать судебный приказ на $solidarity взыскание в пользу {$this->H['name_organization_full']}:",false,true);
 
 
         $this->addText("1.	Задолженность по оплате за обслуживание жилья и текущий ремонт мест общего пользования в размере:{$this->H['accrual']} р.  за период c {$this->H['dateStart']} по {$this->H['dateEnd']} гг" .
@@ -153,26 +164,25 @@ class VIEW extends \Reports\reportView
 
 
 
-        $this->addText("");
         $this->addText("Приложение:",false,true);
         $this->addText("1.	Справка о начислении за ЖКУ на {$this->H['dateEnd']}",false,true);
         $this->addText("2.	Справка паспортного стола от {$this->H['dateEnd']}",false,true);
-        $this->addText("3.	Копия договора управления МКД № XXXXX от XX.XX.XX.",false,true);
+        $this->addText("3.	Квитанция об оплате госпошлины.",false,true);
+        $this->addText("4.	Копия почтовой квитанции о вручении заявления о выдачи судебного приказа.",false,true);
+        $this->addText("5.	Копия доверенности на представителя ",false,true);
+        if ($this->H['PenaltyOff'] == 1){
+            $this->addText("6.	Расчет пени.",false,true);
+        }
+
+/*        $this->addText("3.	Копия договора управления МКД № XXXXX от XX.XX.XX.",false,true);
         $this->addText("4.	Копия свидетельства о государственной регистрации",false,true);
         $this->addText("5.	Копия свидетельства о постановке на налоговый учет ",false,true);
         $this->addText("6.	Копия Устава.",false,true);
-        $this->addText("7.	Квитанция об оплате госпошлины.",false,true);
-        $this->addText("8.	Копия почтовой квитанции о вручении заявления о выдачи судебного приказа.",false,true);
+*/
 
-        $this->addText("9.	Копия доверенности на представителя ",false,true);
-        if ($this->H['PenaltyOff'] == 1){
-            $this->addText("9.	Расчет пени.",false,true);
-        }
-
-        $this->addText("");
         $this->addText("");
         $this->addText("Представитель ",false,true);
-        $this->addText("ООО «Жилсервис»                                    __________________   /О.М. Самойлова/",false,true);
+        $this->addText("{$this->H['name_organization']}                               __________________   /$Signatory/",false,true);
         $this->addText("(по доверенности) ",false,true);
         $this->addText("");
 
@@ -181,7 +191,7 @@ class VIEW extends \Reports\reportView
 
     private function addPeopleInToHeader()
     {
-
+        $this->countOfHuman = 0;
         foreach ($this->data as  $key => $t1){
             $textRun = $this->section->createTextRun($this->style3);
             $textRun->addText("Должник: ",$this->SF_bold);
@@ -200,6 +210,7 @@ class VIEW extends \Reports\reportView
             $textRun->addText($this->H['addressHouse'],$this->SF_Norm);
 
             $this->addHeadText('',false,false);
+            $this->countOfHuman ++;
         }
     }
 

@@ -11,9 +11,7 @@ namespace DB;
  */
 abstract class Connection
 {
-    const SECURITY = 'SECURITY';
-    const GD = 'GLOBAL';
-    const SITE = 'SITE';
+
 
     private $MSSQL;
     private $typeFetch = \PDO::FETCH_ASSOC;
@@ -31,11 +29,16 @@ abstract class Connection
     private $set;
 
     private $idWhere;
-    private $where=array();
+    private $where = array();
+
+    private $S1 = '[';
+    private $S2 = ']';
 
     private $arrayConnectionSettings;
 
-     function __construct($arrayConnectionSettings = false,$MSSQL = true)
+    private $join = '';
+
+    function __construct($arrayConnectionSettings = false,$MSSQL = true)
     {
 
         $this->MSSQL = $MSSQL;
@@ -48,27 +51,32 @@ abstract class Connection
 
     }
 
+
     private function Conn()
     {
-        //error_reporting(0);
-
-        if ($this->MSSQL)
+        if ($this->MSSQL) {
+            $this->S1='[';
+            $this->S2=']';
             $this->connPDO();
-        else
-            $this->connPDO_MySQL();
+        }
+        else {
+            $this->S1='';
+            $this->S2='';
 
-        //error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+            $this->connPDO_MySQL();
+        }
     }
 
-    private function connPDO_MySQL(){
-        try{
+    private function connPDO_MySQL()
+    {
+        try {
 
-            $this->dbh = new \PDO("mysql:host=" . $this->arrayConnectionSettings["serverName"] . ";dbname=" . $this->arrayConnectionSettings["dataBase"].";charset=utf8",
+            $this->dbh = new \PDO("mysql:host=" . $this->arrayConnectionSettings["serverName"] . ";dbname=" . $this->arrayConnectionSettings["dataBase"] . ";charset=utf8",
                 $this->arrayConnectionSettings["userName"], $this->arrayConnectionSettings["password"],
                 array("charset" => "UTF-8"));
-        }catch (\PDOException $e){
-            print "===================================error==========================================";
-//    $e->getMessage();
+        } catch (\PDOException $e) {
+            print "===================================error 1==========================================";
+            //$e->getMessage();
             exit;
         }
     }
@@ -76,12 +84,13 @@ abstract class Connection
     private function connPDO()
     {
 
-        try{
-            $this->dbh = new \PDO("sqlsrv:Server=" . $this->arrayConnectionSettings["serverName"] . ";Database=" . $this->arrayConnectionSettings["dataBase"].";Encrypt=0;TrustServerCertificate=1"
+        try {
+            $this->dbh = new \PDO("sqlsrv:Server=" . $this->arrayConnectionSettings["serverName"] . ";Database=" . $this->arrayConnectionSettings["dataBase"] . ";Encrypt=0;TrustServerCertificate=1"
                 , $this->arrayConnectionSettings["userName"], $this->arrayConnectionSettings["password"]);
-        }catch (\PDOException $e){
-            print "===================================error==========================================";
-            // $e->getMessage();
+        } catch (\PDOException $e) {
+            print "===================================error 22=========================================</br>";
+            //print $this->arrayConnectionSettings["serverName"] . ";Database=" . $this->arrayConnectionSettings["dataBase"]."</br>";
+            //print $e->getMessage();
             exit;
         }
     }
@@ -93,37 +102,84 @@ abstract class Connection
     */
     public function table($nameTable)
     {
-        $this->table=$nameTable;
+        $this->table = $nameTable;
         $this->init();
         return $this;
     }
 
-    private function init()
+
+    /**
+     * @return mixed
+     */
+    static function getName()
     {
-        $this->idSet=-1;
-        $this->set=array();
-        $this->idWhere=-1;
-        $this->where=array();
+        $t_arr = explode('\\', static::class);
+        return array_pop($t_arr);
+    }
+
+
+    public function init()
+    {
+        $this->join = '';
+        $this->idSet = -1;
+        $this->set = array();
+        $this->idWhere = -1;
+        $this->where = array();
         $this->orderBy = false;
         $this->groupBy = false;
     }
 
-    public function where($var,$data,$znak="=",$logical='and')
+
+
+    public function INNER_JOIN($nameTable)
     {
-        $this->idWhere++;
-        $this->where[$this->idWhere]['variable']=$var;
-        $this->where[$this->idWhere]['data']=$data;
-        $this->where[$this->idWhere]['znak']=$znak;
-        $this->where[$this->idWhere]['logical']=$logical;
+        $this->join .= " INNER JOIN $nameTable ON";
         return $this;
     }
 
-    public function set($var,$data,$binary = false)
+    public function LEFT_OUTER_JOIN($nameTable)
+    {
+        $this->join .= " LEFT OUTER JOIN $nameTable ON";
+        return $this;
+    }
+
+    public function FULL_OUTER_JOIN($nameTable)
+    {
+        $this->join .= " FULL OUTER JOIN $nameTable ON";
+        return $this;
+    }
+
+    public function RIGHT_OUTER_JOIN($nameTable)
+    {
+        $this->join .= " RIGHT OUTER JOIN $nameTable ON";
+        return $this;
+    }
+
+
+    public function WHERE_JOIN($param1,$znak ,$param2, $logical = '')
+    {
+        $this->join .= " $param1 $znak $param2 ";
+        return $this;
+    }
+
+
+
+    public function where($var, $data, $znak = "=", $logical = 'and')
+    {
+        $this->idWhere++;
+        $this->where[$this->idWhere]['variable'] = $var;
+        $this->where[$this->idWhere]['data'] = $data;
+        $this->where[$this->idWhere]['znak'] = $znak;
+        $this->where[$this->idWhere]['logical'] = $logical;
+        return $this;
+    }
+
+    public function set($var, $data, $binary = false)
     {
         $this->idSet++;
-        $this->set[$this->idSet]['variable']=$var;
-        $this->set[$this->idSet]['data']=$data;
-        $this->set[$this->idSet]['binary']=$binary;
+        $this->set[$this->idSet]['variable'] = $var;
+        $this->set[$this->idSet]['data'] = $data;
+        $this->set[$this->idSet]['binary'] = $binary;
 
         return $this;
     }
@@ -146,14 +202,14 @@ abstract class Connection
         $this->typeFetch = $typeFetch;
     }
 
-    public function fetch($goTop=1)
+    public function fetch($goTop = 1)
     {
-        if ($goTop==0){
-            $ret=$this->stmt->fetch($this->typeFetch, \PDO::FETCH_ORI_FIRST);
-        }else {
-            $ret=$this->stmt->fetch($this->typeFetch);
+        if ($goTop == 0) {
+            $ret = $this->stmt->fetch($this->typeFetch, \PDO::FETCH_ORI_FIRST);
+        } else {
+            $ret = $this->stmt->fetch($this->typeFetch);
         }
-        if ($ret){
+        if ($ret) {
             return $ret;
             //return $this->IconvArray($ret);
         } else return false;
@@ -162,13 +218,13 @@ abstract class Connection
 
     public function fetchField($filed)
     {
-        if (isset($filed)){
-            if ($res=$this->fetch()){
+        if (isset($filed)) {
+            if ($res = $this->fetch()) {
                 return $res[$filed];
-            }else{
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
     }
@@ -193,14 +249,14 @@ abstract class Connection
     {
         $this->Conn();
 
-        $query= $this->table;
+        $query = $this->table;
         $this->stmt = $this->dbh->prepare($query);
 
-        if ($this->idWhere>=0) {
+        if ($this->idWhere >= 0) {
             for ($i = 0; $i <= $this->idWhere; $i++) {
-                $param = ':'.$this->where[$i]['variable'];
-                $data=$this->where[$i]['data'];
-                $this->stmt->bindValue($param , $data);
+                $param = ':' . $this->where[$i]['variable'];
+                $data = $this->where[$i]['data'];
+                $this->stmt->bindValue($param, $data);
 
             }
         }
@@ -210,34 +266,44 @@ abstract class Connection
     }
 
 
-
-
-    public function select($fileds=" * ")
+    public function getQuerySelect(Array $columns)
     {
         $this->Conn();
+        $fileds = '';
+        foreach ($columns as $column){
+            $fileds .= $column.",";
+        }
+        $fileds = substr($fileds,0,-1);
 
-        $textWhere="";
-        if ($this->idWhere>=0){
-            $textWhere=" where  ";
-            for ($i=0;$i<=$this->idWhere;$i++){
-                $_if = $this->where[$i]['data']!=Null ? " :var".$i : 'Null';
-                $textWhere =$textWhere. "(" . $this->where[$i]['variable']. " ".$this->where[$i]['znak'].$_if.")".($i+1>$this->idWhere?"":" {$this->where[$i]['logical']} ");
+        $textWhere = "";
+        if ($this->idWhere >= 0) {
+            $textWhere = " where  ";
+            for ($i = 0; $i <= $this->idWhere; $i++) {
+                $_if = $this->where[$i]['data'] != Null ? " :var" . $i : 'Null';
+                $textWhere = $textWhere . "(" . $this->where[$i]['variable'] . " " . $this->where[$i]['znak'] . $_if . ")" . ($i + 1 > $this->idWhere ? "" : " {$this->where[$i]['logical']} ");
             }
 
         }
-        $orderBy = $this->orderBy ? " ORDER BY ".$this->orderBy : "";
-        $groupBy = $this->groupBy ? " GROUP BY ".$this->groupBy : "";
+        $orderBy = $this->orderBy ? " ORDER BY " . $this->orderBy : "";
+        $groupBy = $this->groupBy ? " GROUP BY " . $this->groupBy : "";
 
-        $query= "select  ".$fileds." from " . $this->table . " ".$textWhere." ".$groupBy." ".$orderBy ;
+        $query = "select  " . $fileds . " from " . $this->table." ". $this->join . " " . $textWhere . " " . $groupBy . " " . $orderBy;
 
+        return $query;
+    }
+
+
+    public function select($fileds = " * ")
+    {
+        $query = $this->getQuerySelect([$fileds]);
         $this->stmt = $this->dbh->prepare($query);
 
-        if ($this->idWhere>=0) {
+        if ($this->idWhere >= 0) {
             for ($i = 0; $i <= $this->idWhere; $i++) {
-                $param = ':var' .$i;
-                $data=$this->where[$i]['data'];
-                if ($data!=Null){
-                    $this->stmt->bindValue($param , $data);
+                $param = ':var' . $i;
+                $data = $this->where[$i]['data'];
+                if ($data != Null) {
+                    $this->stmt->bindValue($param, $data);
                 }
 
             }
@@ -249,31 +315,31 @@ abstract class Connection
         return $this;
     }
 
-    public function delete ()
+    public function delete()
     {
         $this->Conn();
 
-        $textWhere="";
-        if ($this->idWhere>=0){
-            $textWhere=" where  ";
-            for ($i=0;$i<=$this->idWhere;$i++){
-                $textWhere =$textWhere. "(" . $this->where[$i]['variable']. " ".$this->where[$i]['znak']." :var".$i.")".($i+1>$this->idWhere?"":" and ");
+        $textWhere = "";
+        if ($this->idWhere >= 0) {
+            $textWhere = " where  ";
+            for ($i = 0; $i <= $this->idWhere; $i++) {
+                $textWhere = $textWhere . "(" . $this->where[$i]['variable'] . " " . $this->where[$i]['znak'] . " :var" . $i . ")" . ($i + 1 > $this->idWhere ? "" : " and ");
             }
 
         }
         if ($this->MSSQL)
-            $commandDelete="delete ";
+            $commandDelete = "delete ";
         else
-            $commandDelete="delete from ";
+            $commandDelete = "delete from ";
 
-        $query= $commandDelete . $this->table . " ".$textWhere;
+        $query = $commandDelete . $this->table . " " . $textWhere;
         $this->stmt = $this->dbh->prepare($query);
 
-        if ($this->idWhere>=0) {
+        if ($this->idWhere >= 0) {
             for ($i = 0; $i <= $this->idWhere; $i++) {
-                $param = ':var' .$i;
-                $data=$this->where[$i]['data'];
-                $this->stmt->bindValue($param , $data);
+                $param = ':var' . $i;
+                $data = $this->where[$i]['data'];
+                $this->stmt->bindValue($param, $data);
             }
         }
         $this->init();
@@ -296,35 +362,37 @@ abstract class Connection
     {
         $this->Conn();
 
-        $textWhere="";
-        if ($this->idWhere>=0){
-            $textWhere=" where  ";
-            for ($i=0;$i<=$this->idWhere;$i++){
-                $textWhere =$textWhere. "(" . $this->where[$i]['variable']. " ".$this->where[$i]['znak']." :".$this->where[$i]['variable']."_w )".($i+1>$this->idWhere?"":" and ");
+        $textWhere = "";
+        if ($this->idWhere >= 0) {
+            $textWhere = " where  ";
+            for ($i = 0; $i <= $this->idWhere; $i++) {
+                $textWhere = $textWhere . "(" . $this->where[$i]['variable'] . " " . $this->where[$i]['znak'] . " :" . $this->where[$i]['variable'] . "_w )" . ($i + 1 > $this->idWhere ? "" : " and ");
             }
 
         }
-        $textSET="";
-        if ($this->idSet>=0){
-            $textSET=" set  ";
-            for ($i=0;$i<=$this->idSet;$i++){
-                $textSET =$textSET. $this->set[$i]['variable']. " =   :".$this->set[$i]['variable']." ".($i+1>$this->idSet?"":" , ");
+        $textSET = "";
+        if ($this->idSet >= 0) {
+            $textSET = " set  ";
+            for ($i = 0; $i <= $this->idSet; $i++) {
+                $textSET = $textSET . $this->set[$i]['variable'] . " =   :" . $this->set[$i]['variable'] . " " . ($i + 1 > $this->idSet ? "" : " , ");
             }
 
         }
 
 
-        $query= "update " . $this->table." ".$textSET." ".$textWhere;
+        $query = "update " . $this->table . " " . $textSET . " " . $textWhere;
+
+
         $this->stmt = $this->dbh->prepare("$query");
-        for ($i=0;$i<=$this->idSet;$i++){
-            $this->stmt->bindParam(':'.$this->set[$i]['variable'], $this->set[$i]['data']);
+        for ($i = 0; $i <= $this->idSet; $i++) {
+            $this->stmt->bindParam(':' . $this->set[$i]['variable'], $this->set[$i]['data']);
         }
-        for ($i=0;$i<=$this->idWhere;$i++){
-            $this->stmt->bindParam(':'.$this->where[$i]['variable']."_w", $this->where[$i]['data']);
+        for ($i = 0; $i <= $this->idWhere; $i++) {
+            $this->stmt->bindParam(':' . $this->where[$i]['variable'] . "_w", $this->where[$i]['data']);
         }
 
         $this->init();
-        $res=$this->stmt->execute();
+        $res = $this->stmt->execute();
         unset($stmt);
         return $res;
 
@@ -335,24 +403,24 @@ abstract class Connection
     {
         $this->Conn();
 
-        $textVar="";
-        $textData="";
-        if ($this->idSet>=0){
-            for ($i=0;$i<=$this->idSet;$i++){
-                $textVar = $textVar. $this->set[$i]['variable']." ".($i+1>$this->idSet?"":" , ");
-                $textData = $textData.":".$this->set[$i]['variable']." ".($i+1>$this->idSet?"":" , ");
+        $textVar = "";
+        $textData = "";
+        if ($this->idSet >= 0) {
+            for ($i = 0; $i <= $this->idSet; $i++) {
+                $textVar = $textVar . $this->S1. $this->set[$i]['variable']."$this->S2 ".($i+1>$this->idSet?"":" , ");
+                $textData = $textData . ":" . $this->set[$i]['variable'] . " " . ($i + 1 > $this->idSet ? "" : " , ");
             }
 
         }
-        $query= "INSERT INTO " . $this->table . " (".$textVar. ") values(".$textData.");";
+        $query= "INSERT INTO $this->S1" . $this->table . "$this->S2 (".$textVar. ") values(".$textData.");";
 
 
         $stmt = $this->dbh->prepare("$query");
-        for ($i=0;$i<=$this->idSet;$i++){
+        for ($i = 0; $i <= $this->idSet; $i++) {
             if ($this->set[$i]['binary'])
-                $stmt->bindParam(':'.$this->set[$i]['variable'], $this->set[$i]['data'], \PDO::PARAM_LOB, 0, \PDO::SQLSRV_ENCODING_BINARY);
+                $stmt->bindParam(':' . $this->set[$i]['variable'], $this->set[$i]['data'], \PDO::PARAM_LOB, 0, \PDO::SQLSRV_ENCODING_BINARY);
             else
-                $stmt->bindParam(':'.$this->set[$i]['variable'], $this->set[$i]['data']);
+                $stmt->bindParam(':' . $this->set[$i]['variable'], $this->set[$i]['data']);
         }
 
         $this->init();
@@ -370,18 +438,18 @@ abstract class Connection
     {
         $this->Conn();
 
-        $query= 'exec '. $this->table.' ';
+        $query = 'exec ' . $this->table . ' ';
 
-        for ($i=0;$i<=$this->idSet;$i++){
-            $query =$query. " :".$this->set[$i]['variable']." ".($i+1>$this->idSet?"":" , ");
+        for ($i = 0; $i <= $this->idSet; $i++) {
+            $query = $query . " :" . $this->set[$i]['variable'] . " " . ($i + 1 > $this->idSet ? "" : " , ");
         }
 
         $this->stmt = $this->dbh->prepare($query);
-
-        for ($i=0;$i<=$this->idSet;$i++){
-            $this->stmt->bindParam(':'.$this->set[$i]['variable'], $this->set[$i]['data']);
+        for ($i = 0; $i <= $this->idSet; $i++) {
+            $this->stmt->bindParam(':' . $this->set[$i]['variable'], $this->set[$i]['data']);
 
         }
+
         $this->lastInsertID = $this->dbh->lastInsertId();
         $this->init();
         $this->stmt->execute();

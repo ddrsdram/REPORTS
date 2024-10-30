@@ -9,6 +9,8 @@
 namespace Reports\Tribunal\StatementTribunalOrder;
 
 
+use models\ErrorLog;
+
 class MODEL extends \Reports\reportModel
 {
     private $dataArray;
@@ -108,6 +110,15 @@ class MODEL extends \Reports\reportModel
         //$retArr['dateEnd'] = $dateTxt;
 
 
+        $data = $conn->table('proc_Penalty_get_calculateForOneLS')
+            ->set('id_user',$this->getUser())
+            ->set('ORG',$this->getORG())
+            ->set('id_LS',$retArr['id_LS'])
+            ->SQLExec();
+        $Arr = $data->fetch();
+        $dateTime = strtotime($Arr['id_date']);
+        $retArr['dateStartPenalty'] = \models\dateRUS::get("d F Y ",$dateTime,1);
+
         return $retArr;
     }
 
@@ -153,4 +164,10 @@ class MODEL extends \Reports\reportModel
             mb_substr($str, 1, mb_strlen($str, $encoding), $encoding);
     }
 
+    public function getSettingsTribunal()
+    {
+        $d = new \DB\Table\tribunal_settings();
+        return $d->where($d::ORG,$this->getORG())
+            ->select()->fetch();
+    }
 }
