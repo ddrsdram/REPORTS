@@ -15,7 +15,7 @@ mb_http_output('UTF-8');
 
 require "spl_autoload_register.php";
 print "Start</br>";
-$conn = new \backend\Connection(\backend\Connection::GD);
+$conn = new \backend\Connection(\properties\security::GD);
 
 $data = $conn->table('View_S_B_K_SendingMessage')
     ->select();

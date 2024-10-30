@@ -13,9 +13,9 @@ mb_http_output('UTF-8');
 
 require "spl_autoload_register.php";
 print "Start</br>";
-$conn = new \backend\Connection(\backend\Connection::GD);
-$convertSMS = new \models\ConvertSMS(\backend\Connection::GD);
-$connUpdate = new \backend\Connection(\backend\Connection::GD);
+$conn = new \backend\Connection(\properties\security::GD);
+$convertSMS = new \models\ConvertSMS(\properties\security::GD);
+$connUpdate = new \backend\Connection(\properties\security::GD);
 /*
   загружаем все непрочтённые SMS
 */

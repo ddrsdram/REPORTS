@@ -13,7 +13,7 @@ mb_http_output('UTF-8');
 
 require "spl_autoload_register.php";
 //require "backend/Connection.php";
-$conn = new \backend\Connection(\backend\Connection::GD);
+$conn = new \backend\Connection(\properties\security::GD);
 $job = true;
 $countColl = 0;
 while ($job){

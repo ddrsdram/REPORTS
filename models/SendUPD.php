@@ -41,7 +41,7 @@ class SendUPD
 
     private function getRequisites() :Array
     {
-        $conn = new \DB\Connect(\backend\Connection::GD);
+        $conn = new \DB\Connect(\properties\security::GD);
         return $conn->table('View_S_B_K_UniversalPaymentDocument_ForSend')
             ->where("ORG",$this->ORG)
             ->where("id_month",$this->id_month)
