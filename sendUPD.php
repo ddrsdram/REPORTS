@@ -41,7 +41,7 @@ if ($argv[2] == 'ALL'){
                 id_month = $id_month";
 
 }
-$conn = new \backend\Connection(\backend\Connection::GD);
+$conn = new \backend\Connection(\properties\security::GD);
 $data = $conn->complexQuery($query);
 
 $class = new \models\SendUPD();

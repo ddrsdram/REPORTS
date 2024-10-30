@@ -22,7 +22,7 @@ class Server
         print "</br>".chr(10).chr(13);
 
         $convertSMS = new ConvertSMS();
-        $conn = new \backend\Connection(\backend\Connection::GD);
+        $conn = new \backend\Connection(\properties\security::GD);
 
 
         $this->modem->writeData("at+csq");
@@ -103,7 +103,7 @@ class Server
         print "</br>".chr(10).chr(13);
         print "</br>".chr(10).chr(13);
 
-        $conn = new \backend\Connection(\backend\Connection::GD);
+        $conn = new \backend\Connection(\properties\security::GD);
 
         $SMS_send_all=$conn->table("SMS_send")
             ->where("f_exec",'0')

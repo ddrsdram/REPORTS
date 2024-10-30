@@ -7,5 +7,5 @@ require "spl_autoload_register.php";
 print "Start</br>";
 
 $query = "UPDATE S_B_K_CurentMonth set id_month = id_month + 1";
-$conn = new \backend\Connection(\backend\Connection::GD);
+$conn = new \backend\Connection(\properties\security::GD);
 $data = $conn->complexQuery($query);

@@ -13,9 +13,9 @@ mb_http_output('UTF-8');
 
 require "spl_autoload_register.php";
 print "Start</br>";
-$conn = new \backend\Connection(\backend\Connection::GD);
+$conn = new \backend\Connection(\properties\security::GD);
 
-$connUpdate = new \backend\Connection(\backend\Connection::GD);
+$connUpdate = new \backend\Connection(\properties\security::GD);
 
 /*
   получаем все имена организаций

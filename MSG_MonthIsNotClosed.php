@@ -21,7 +21,7 @@ if (($argv[1] == 'true') || ($argv[1] == 'false')){
     return;
 }
 
-$conn = new \backend\Connection(\backend\Connection::GD);
+$conn = new \backend\Connection(\properties\security::GD);
 $data = $conn->table('View_S_B_K_MonthIsNotClosed')
     ->select();
 

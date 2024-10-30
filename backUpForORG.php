@@ -14,7 +14,7 @@ mb_http_output('UTF-8');
 require "spl_autoload_register.php";
 print "Start</br>";
 
-$conn0 = new \backend\Connection(\backend\Connection::GD);
+$conn0 = new \backend\Connection(\properties\security::GD);
 
 $query = 'SELECT        TOP (100) PERCENT serverName, [dataBase], userName, password
 FROM            ORG
