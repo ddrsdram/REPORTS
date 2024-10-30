@@ -34,6 +34,7 @@ class Control extends \Reports\reportControl
         $this->VIEW->setResultFileName($this->id_report);
         $this->VIEW->setData($data);
         $this->VIEW->setDataHead($headArray);
+        $this->VIEW->setMODEL($this->MODEL);
 
         $this->VIEW->FillingInData();
         $this->VIEW->saveFile();

@@ -7,6 +7,7 @@
  */
 set_time_limit (0);
 require "spl_autoload_register.php";
+/*
 print date ("Y-m-d H:i:s");
 print "</br>";
 
@@ -33,3 +34,30 @@ unset($mail);
 print $message;
 
 print date ("Y-m-d H:i:s");
+*/
+$d = dir("/hdd2");
+echo "Дескриптор: " . $d->handle . "\n";
+echo "Путь: " . $d->path . "\n";
+$date1 = new DateTime(date("d.m.Y"));
+
+while (false !== ($entry = $d->read())) {
+    if ( ! ( ( $entry == "." ) || ( $entry == ".." ) ) ){
+        $filename = $d->path . '/' . $entry;
+
+        echo $filename."\n";
+        if (file_exists($filename)) {
+            $file_creation_date = filectime($filename);
+            $date2 = new DateTime(date('d.m.Y', $file_creation_date));
+            $interval = $date1->diff($date2);
+            print_r($interval). "\n";
+            if ($interval->days > 35){
+                unlink($filename);
+            }
+        } else {
+            echo "File does not exist."."\n";
+        }
+    }
+
+
+}
+$d->close();

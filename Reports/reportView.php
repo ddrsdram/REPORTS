@@ -32,7 +32,20 @@ abstract class reportView
     public $SheetResult;
 
     public $spreadsheet;
-    
+
+
+    public $MODEL;
+
+    /**
+     * @param mixed $MODEL
+     */
+    public function setMODEL($MODEL): void
+    {
+        $this->MODEL = $MODEL;
+    }
+
+
+
     /**
      * @param mixed $data
      */
