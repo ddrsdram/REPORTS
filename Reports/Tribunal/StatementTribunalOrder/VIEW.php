@@ -90,6 +90,10 @@ class VIEW extends \Reports\reportView
         $this->addHeadText($this->H['name_organization']);
         $this->addHeadText('Адрес:');
         $this->addHeadText($this->H['address']);
+        $INN = $this->H['INN'];
+        $OGRN = $this->H['OGRN'];
+        $this->addHeadText("ИНН:$INN ОГРН:$OGRN");
+
         $this->addHeadText('',false,false);
         $this->addPeopleInToHeader();
         // перечень людей для суда
