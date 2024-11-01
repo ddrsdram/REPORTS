@@ -61,7 +61,7 @@ class RefinancingRate
 
         $dateStart = $dateStart->modify('+1 day');
 
-        $conn = new Connect(Connect::GD);
+        $conn = new Connect(\properties\security::GD);
         //$conn->table('refinancingRate')->delete();
 
         while ((int) $this->dateEnd->diff($dateStart)->format("%a") <> 0){
@@ -101,7 +101,7 @@ class RefinancingRate
      */
     private function getOldDateIntoDB()
     {
-        $conn = new \DB\Connect(\DB\Connect::GD);
+        $conn = new \DB\Connect(\properties\security::GD);
 
         $query = "
         SELECT        ISNULL(MIN(id_date),
@@ -143,7 +143,7 @@ class RefinancingRate
 
     private function deleteWeekend()
     {
-        $conn = new \DB\Connect(\DB\Connect::GD);
+        $conn = new \DB\Connect(\properties\security::GD);
         $query="SELECT        TOP (1) weekend FROM refinancingRate ORDER BY id_date DESC";
         $weekend = $conn->complexQuery($query)->fetchField('weekend');
         print chr(10).chr(13);
@@ -156,7 +156,7 @@ class RefinancingRate
     }
     private function deleteLastXDays($x)
     {
-        $conn = new \DB\Connect(\DB\Connect::GD);
+        $conn = new \DB\Connect(\properties\security::GD);
         $query="
         delete refinancingRate
             from (

@@ -16,7 +16,7 @@ class Reports
 
     function __construct()
     {
-        $this->conn = new \DB\Connect(\DB\Connect::GD);
+        $this->conn = new \DB\Connect(\properties\security::GD);
         $security = new \properties\security();
         $this->serverName = $security->getPrintServer();
 
