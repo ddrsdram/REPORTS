@@ -140,7 +140,7 @@ class UPD
      */
     public function prepareData($classReports)
     {
-        $security = new \DB\Connect(\DB\Connect::GD);
+        $security = new \DB\Connect(\properties\security::GD);
         $arrayConnectionSettings = $security->table("ORG")
             ->where("ORG",$this->ORG)
             ->select("serverName, [dataBase], userName, password")->fetch();
