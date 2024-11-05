@@ -147,6 +147,7 @@ class MODEL extends \Reports\reportModel
         if ($bStr){
             $ret[$id_LS]['table_recalculate'][] = $val;
         }
+
         return $ret;
     }
 
