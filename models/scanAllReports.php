@@ -16,7 +16,7 @@ class scanAllReports
     private $files;
     function __construct()
     {
-        $this->conn = new \DB\Connect(\DB\Connect::SECURITY);
+        $this->conn = new \DB\Connect(\properties\security::SECURITY);
 
     }
 
