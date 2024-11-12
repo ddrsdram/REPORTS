@@ -7,7 +7,7 @@
  */
 set_time_limit (0);
 require "spl_autoload_register.php";
-/*
+
 print date ("Y-m-d H:i:s");
 print "</br>";
 
@@ -34,7 +34,7 @@ unset($mail);
 print $message;
 
 print date ("Y-m-d H:i:s");
-*/
+
 $d = dir("/hdd2");
 echo "Дескриптор: " . $d->handle . "\n";
 echo "Путь: " . $d->path . "\n";

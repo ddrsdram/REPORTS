@@ -22,7 +22,7 @@ class VIEW extends \Reports\reportView
     /**
      * @var \Reports\Tribunal\StatementOfClaim\MODEL
      */
-    private $MODEL;
+    public $MODEL;
 
     function init()
     {
@@ -50,12 +50,6 @@ class VIEW extends \Reports\reportView
             'bgColor' => 'ffffff'
         );
 
-    }
-
-
-    public function setMODEL($MODEL)
-    {
-        $this->MODEL = $MODEL;
     }
 
 
