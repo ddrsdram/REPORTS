@@ -99,13 +99,13 @@ class MODEL extends \Reports\reportModel
 
         $dateTxt = "{$data['year_month_start']}-{$data['nom_month_start']}-01";
         $dateTime = strtotime($dateTxt);
-        $newDateTxt= \models\dateRUS::get("d F Y ",$dateTime,1);
+        $newDateTxt= \models\dateRUS::get('"d" F Y ',$dateTime,1);
         $retArr['dateStart'] = $newDateTxt;
         //$retArr['dateStart'] = $dateTxt;
 
         $dateTxt = "{$data['year_month_end']}-{$data['nom_month_end']}-{$data['lastDay_month_end']}";
         $dateTime = strtotime($dateTxt);
-        $newDateTxt = \models\dateRUS::get("d F Y ",$dateTime,1);
+        $newDateTxt = \models\dateRUS::get('"d" F Y ',$dateTime,1);
         $retArr['dateEnd'] = $newDateTxt;
         //$retArr['dateEnd'] = $dateTxt;
 
@@ -117,7 +117,7 @@ class MODEL extends \Reports\reportModel
             ->SQLExec();
         $Arr = $data->fetch();
         $dateTime = strtotime($Arr['id_date']);
-        $retArr['dateStartPenalty'] = \models\dateRUS::get("d F Y ",$dateTime,1);
+        $retArr['dateStartPenalty'] = \models\dateRUS::get('"d" F Y ',$dateTime,1);
 
         return $retArr;
     }
@@ -131,7 +131,8 @@ class MODEL extends \Reports\reportModel
         $FIO =  $this->mb_strtoupper_first($row['fam'])." ".$this->mb_strtoupper_first($row['im'])." ".$this->mb_strtoupper_first($row['ot']);
         $row['FIO'] = $FIO;
 
-        $FIO_case =  $transName->q($FIO, \models\NameCaseLib\NCL\NCL::$RODITLN);
+        //$FIO_case =  $transName->q($FIO, \models\NameCaseLib\NCL\NCL::$RODITLN);
+        $FIO_case =  $FIO;
         $row['FIO_case'] = $FIO_case;
         $this->fio_summ .= ' ' . $FIO_case . ', ';
 

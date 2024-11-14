@@ -160,8 +160,8 @@ class VIEW extends \Reports\reportView
         $this->addText("Выдать судебный приказ на $solidarity взыскание в пользу {$this->H['name_organization_full']}:",false,true);
 
 
-        $this->addText("1.	Задолженность по оплате за обслуживание жилья и текущий ремонт мест общего пользования в размере:{$this->H['accrual']} р.  за период c {$this->H['dateStart']} по {$this->H['dateEnd']} гг" .
-            ", пени в размере {$this->H['SumPenalty']} за период c {$this->H['dateStart']} по {$this->H['dateEnd']} гг",false,true);
+        $this->addText("1.	Задолженность по оплате за обслуживание жилья и текущий ремонт мест общего пользования в размере: {$this->H['accrual']} р.  за период c {$this->H['dateStart']} по {$this->H['dateEnd']} гг" .
+            ", пени в размере {$this->H['SumPenalty']} за период c {$this->H['dateStartPenalty']} по {$this->H['dateEnd']} гг",false,true);
         $this->addText("2.	Оплаченной госпошлины в размере {$this->H['GosPoshlina']} руб.",false,true);
         //$this->addText("",true,true);
         $this->addText("ВСЕГО: {$this->H['summa']} ({$this->H['text']})",true,true);
