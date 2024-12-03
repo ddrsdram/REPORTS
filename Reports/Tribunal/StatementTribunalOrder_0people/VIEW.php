@@ -6,7 +6,7 @@
  * Time: 16:00
  */
 
-namespace Reports\Tribunal\StatementTribunalOrder;
+namespace Reports\Tribunal\StatementTribunalOrder_0people;
 
 
 class VIEW extends \Reports\reportView
@@ -113,7 +113,8 @@ class VIEW extends \Reports\reportView
             "выполняет работы по текущему ремонту внутридомовых инженерных сетей, наружных вводов и выпусков, конструктивных элементов здания, работы ".
             "по обеспечению содержания жилого помещения и его оборудования  в надлежащем техническом состоянии, производит уборку подъездов, вестибюлей, ".
             "тамбуров, лестничных клеток и придомовой территории.");
-        $this->addText("Согласно справке паспортного стола от XX.XX.XXXX года по адресу: ".$this->H['addressHouse']." зарегистрированы: {$this->H['FIOSumm']}",false,true);
+        $this->addText("Согласно справке паспортного стола от XX.XX.XXXX года по адресу: ".$this->H['addressHouse']." зарегистрированных нет",false,true);
+        $this->addText("Сведениями о собственниках данного жилого помещения Заявитель не обладает.",true,true);
 
         //$this->addPeopleInToBody();
 
@@ -154,10 +155,11 @@ class VIEW extends \Reports\reportView
         $this->addText("На основании вышеизложенного и руководствуясь ст.ст. 153, 154, 155 ЖК РФ, ст.ст. 779, 782, 1102, 1105 ГК РФ, ст.ст. 122-124 ГПК РФ.",false,true);
 
         $this->addText("ПРОШУ:",true,true);
-        $solidarity = "солидарное";
-        if ($this->countOfHuman == 1) // если один человек в приказе то не используем слово "солиданое" в сочитании "солиданое взыскание"
-            $solidarity = "";
-        $this->addText("Выдать судебный приказ на $solidarity взыскание в пользу {$this->H['name_organization_full']}:",false,true);
+
+        $this->addText("Запросить сведения о фамилии, имени, отчестве, дате и месте рождение, месте жительства или месте пребывании и иных идентификационных данных Должника в соответствующих органах;",false,true);
+
+        $addressHouse = $this->H['addressHouse'];
+        $this->addText("Вынести судебный приказ о взыскании задолженности за оказанные услуги и выполненные работы с Должника по адресу $addressHouse  в пользу {$this->H['name_organization_full']}:",false,true);
 
 
         $this->addText("1.	Задолженность по оплате за обслуживание жилья и текущий ремонт мест общего пользования в размере: {$this->H['accrual']} р.  за период c {$this->H['dateStart']} по {$this->H['dateEnd']} гг" .
@@ -196,26 +198,26 @@ class VIEW extends \Reports\reportView
     private function addPeopleInToHeader()
     {
         $this->countOfHuman = 0;
-        foreach ($this->data as  $key => $t1){
-            $textRun = $this->section->createTextRun($this->style3);
-            $textRun->addText("Должник: ",$this->SF_bold);
-            $textRun->addText("{$t1['FIO']} {$t1['birthday']} г.р.",$this->SF_Norm);
+        $textRun = $this->section->createTextRun($this->style3);
+        $textRun->addText("Должник: ",$this->SF_bold);
 
-            $textRun = $this->section->createTextRun($this->style3);
-            $textRun->addText("Уроженец (ка): ",$this->SF_bold);
-            $textRun->addText("{$t1['caption']}",$this->SF_Norm);
+        $textRun = $this->section->createTextRun($this->style3);
+        $textRun->addText("Физическое лицо ",$this->SF_bold);
 
-            $textRun = $this->section->createTextRun($this->style3);
-            $textRun->addText("Паспорт: ",$this->SF_bold);
-            $textRun->addText("{$t1['s_doc']} {$t1['n_doc']} {$t1['data_create']} {$t1['issued_by']}",$this->SF_Norm);
+        $textRun = $this->section->createTextRun($this->style3);
+        $textRun->addText("ФИО должника: ",$this->SF_bold);
+        $textRun->addText("не известно",$this->SF_Norm);
 
-            $textRun = $this->section->createTextRun($this->style3);
-            $textRun->addText("Проживающий:",$this->SF_bold);
-            $textRun->addText($this->H['addressHouse'],$this->SF_Norm);
+        $textRun = $this->section->createTextRun($this->style3);
+        $textRun->addText("Дата и место рождения должника: ",$this->SF_bold);
+        $textRun->addText("",$this->SF_Norm);
 
-            $this->addHeadText('',false);
-            $this->countOfHuman ++;
-        }
+        $textRun = $this->section->createTextRun($this->style3);
+        $textRun->addText("Адрес местонахождения имущества:",$this->SF_bold);
+        $textRun->addText($this->H['addressHouse'],$this->SF_Norm);
+
+        $this->addHeadText('',false);
+        $this->countOfHuman ++;
     }
 
     private function addPeopleInToBody()
