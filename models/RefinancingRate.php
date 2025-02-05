@@ -77,6 +77,8 @@ class RefinancingRate
             $nextDate = $calendar->nextJobDay($dateStart)->format("d.m.Y");
             $weekend = $calendar->isNonWorking($dateStart) === true ? '1' : "0";
 
+            if (strtotime($id_date) > strtotime('31.12.2024'))
+                $rate = 9.5;
             try{
                 $conn->table('refinancingRate')
                     ->set('year',$year)
