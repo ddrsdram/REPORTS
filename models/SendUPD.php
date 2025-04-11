@@ -81,7 +81,7 @@ class SendUPD
         $message = $MSG->getMessage();
         print $message;
 
-        $subject = "АИС СеДиАнт - Автоматезированное оповещение";
+        $subject = "АИС СеДиАнт - Автоматезированное оповещение ". $res['name_ORG'];
 
         $mail = new \models\SendMail();
         $mail->setAddress('tehnosd@mail.ru');
