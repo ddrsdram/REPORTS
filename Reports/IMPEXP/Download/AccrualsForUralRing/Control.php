@@ -10,7 +10,7 @@ class Control extends \Reports\reportControl
 
         $this->nameReport = "mailex";
         $this->extensionName = ".txt";
-        $this->descriptionReport = "Выгрузка данных По формату MAILEX";
+        $this->descriptionReport = "Выгрузка данных По формату MAILEX (система город)";
         $this->manageTable = 'month_DAM_download_accruals_mail';
 
 

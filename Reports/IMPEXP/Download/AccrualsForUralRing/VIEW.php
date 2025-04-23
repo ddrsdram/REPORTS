@@ -41,7 +41,7 @@ class VIEW extends \Reports\reportView
         $db = fopen($this->resultFilePath.'/'.$this->nameReport.$this->extensionName, 'w+');
         fwrite ( $db, "#FileSum $summa".chr(13).chr(10) );
         fwrite ( $db, "#Type 7".chr(13).chr(10) );
-        fwrite ( $db, "#Service 1828".chr(13).chr(10) );
+        fwrite ( $db, "#Service 163450".chr(13).chr(10) );
         foreach ($arr as $key => $A){
             fwrite ( $db, "{$A['FIO']};{$A['name']},{$A['UL']},{$A['DOM']},{$A['KV']};{$A['LCHET']};{$A['SALDON']};;;;".chr(13).chr(10) );
         }
