@@ -27,6 +27,7 @@ class MODEL extends \Reports\reportModel
 
         $data_table = $conn_table->table('View_AFY_accruals_byHouse')
             ->where('id_user',$id_user)
+            ->where('id_street','0',' <> ')
             ->orderBy('id_street,int_house,house,sorting')
             ->select();
 
