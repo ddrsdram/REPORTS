@@ -22,12 +22,12 @@ class MODEL extends \Reports\reportModel
 
         $data_head = $conn_head->table('View_AFY_head_byHouse')
             ->where('id_user',$id_user)
-            ->orderBy('name_street,int_house')
+            ->orderBy('name_street,int_house,house')
             ->select();
 
         $data_table = $conn_table->table('View_AFY_accruals_byHouse')
             ->where('id_user',$id_user)
-            ->orderBy('id_street,int_house,sorting')
+            ->orderBy('id_street,int_house,house,sorting')
             ->select();
 
 
