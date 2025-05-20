@@ -83,7 +83,6 @@ class MODEL extends \Reports\reportModel
                   (dateUnReg > convert(date,'{$this->data['dateUnReg']}') OR dateUnReg is null)
             group by FIO.fam,FIO.im,FIO.ot,FIO.DOB
         ";
-\models\ErrorLog::saveError($query,typeSaveMode: 'w+');
 
         $data = $conn->complexQuery($query);
 

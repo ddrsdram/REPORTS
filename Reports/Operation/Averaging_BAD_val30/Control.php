@@ -23,14 +23,12 @@ class Control extends \Reports\reportControl
     {
         $this->MODEL->updateReports_register();
         $data = $this->MODEL->getData();
-        ErrorLog::saveError($data);
         $path = $_SERVER['DOCUMENT_ROOT']."/ImpExp/";
         $copyToExcel = new  \models\CopyToExcel();
         $copyToExcel->setFileName($this->id_report.$this->extensionName)
             ->setPath($path)
             ->setDataArray($data)
             ->save();
-        ErrorLog::saveError("ОК");
         //sleep(10);
         // TODO: Implement run() method.
         //unset($copyToExcel);

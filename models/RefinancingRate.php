@@ -120,13 +120,11 @@ class RefinancingRate
          *  по умочанию дата начала поиска ставки рефинансирования должна вычисляться
          * но мы можем задать этот диапазон в ручную
          */
-        \models\ErrorLog::saveError("вычисленная дада начала поиска ставки рефинансирования - $oldDate_string",'LogRefinancingRate.err');
 
         if ($this->dateStart !== false){
 
             $oldDate_string = $this->dateStart;
         }
-        \models\ErrorLog::saveError("итоговая дада начала поиска ставки рефинансирования - $oldDate_string",'LogRefinancingRate.err');
 
         $oldDate = new \DateTimeImmutable("$oldDate_string");
 
