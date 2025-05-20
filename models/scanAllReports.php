@@ -9,6 +9,8 @@
 namespace models;
 
 
+use Views\mPrint;
+
 class scanAllReports
 {
 
@@ -23,8 +25,7 @@ class scanAllReports
 
     public function registerAllElements()
     {
-        print __METHOD__;
-        print "</br>";
+        \Views\mPrint::R(__METHOD__);
         $this->files = array();
         $this->scanDirs(\properties\security::DOCUMENT_ROOT_PATH."/Reports","/Reports","Reports");
 
@@ -47,7 +48,8 @@ class scanAllReports
                 {
                     if ($file=="Control.php"){
                         array_push($this->files , $path."/".$file);
-                        print "methods $path</br>";
+                        mPrint::R("methods $path");
+
 
                         $class = $path."/Control";
                         $class = str_replace("/","\\",$class);
@@ -56,14 +58,12 @@ class scanAllReports
                         $Object= new $class('');
                         $path1 = str_replace("/","\\",$path);
 
-                        print "</br>";
                         try {
                             $this->conn->table("reports")
                                 ->set("report",$path1)
                                 ->insert();
                         }catch (\PDOException $e){
-
-                            print "Ключь уже есть</br>";
+                            mPrint::R("Ключь уже есть");
                         }
 
                         $this->conn->table("reports")

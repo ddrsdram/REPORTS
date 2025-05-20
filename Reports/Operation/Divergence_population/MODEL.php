@@ -45,7 +45,6 @@ class MODEL extends \Reports\reportModel
                 ON 
                     now.id_street = street.id
         ";
-        \models\ErrorLog::saveError($query,typeSaveMode: 'w+');
 
         return $conn->complexQuery($query)->fetchAll();
     }
@@ -84,7 +83,6 @@ class MODEL extends \Reports\reportModel
             ON 
                 now.id_street = street.id
         ";
-        \models\ErrorLog::saveError($query);
         return $conn->complexQuery($query)->fetchAll();
     }
 }

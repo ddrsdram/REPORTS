@@ -2,4 +2,4 @@
 require_once "../spl_autoload_register.php";
 $SD= new models\scanAllReports();
 $SD->registerAllElements();
-print "</br> выполнилось всё ";
+\Views\mPrint::R("выполнилось всё");

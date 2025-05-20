@@ -56,7 +56,10 @@ class Router
 
     public function AppRun()
     {
+
         $this->detectProperties();
+        \models\ErrorLog::saveError($this,"txt.txt");
+
         if ($this->getWait()){
             $this->runNow();
         }else{
@@ -122,11 +125,9 @@ class Router
         $res = $this->conn->table("View_reports_register")
             ->where("id", $this->id_Reports_register)
             ->select()->fetch();
-        ErrorLog::saveError($res,typeSaveMode: "w+");
 
         $this->wait = $res['wait'];
         $this->report = $res['report'];
-        ErrorLog::saveError($this);
     }
 
     private function setEndTimeForReport()

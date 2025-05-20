@@ -7,30 +7,48 @@ use \DB\Connection;
 
 class import_Gorset extends Connection
 {
-	const ORG =  'ORG';
+    const ORG = 'ORG';
 
-	const codabon =  'codabon';
+    const NAME_ST = 'NAME_ST';
 
-	const areal =  'areal';
+    const NAME_HO = 'NAME_HO';
 
-	const name_street =  'name_street';
+    const NAME_TP = 'NAME_TP';
 
-	const fio =  'fio';
+    const CODABON = 'CODABON';
 
-	const mark =  'mark';
+    const NASEL = 'NASEL';
 
-	const factory_number =  'factory_number';
+    const AREAL = 'AREAL';
 
-	const value_start =  'value_start';
+    const FIO = 'FIO';
 
-	const region =  'region';
+    const NTYPE = 'NTYPE';
 
-	const id_street =  'id_street';
+    const ZN = 'ZN';
 
-	const house =  'house';
+    const KOEF = 'KOEF';
 
-	const room =  'room';
+    const SERNUM = 'SERNUM';
 
-	const id_LS_global =  'id_LS_global';
+    const COUNT = 'COUNT';
+
+    const DATELAST = 'DATELAST';
+
+    const RES_COUNT = 'RES_COUNT';
+
+    const RES_DATE = 'RES_DATE';
+
+    const name_street = 'name_street';
+
+    const id_street = 'id_street';
+
+    const house = 'house';
+
+    const room = 'room';
+
+    const region = 'region';
+
+    const id_LS_global = 'id_LS_global';
 
 }

@@ -39,7 +39,6 @@ spl_autoload_register(function ($class) {
         }
         $class = $class . "\\" . $value;
     }
-    if ($rep) \models\ErrorLog::saveError($path,'foundClass.txt');
 
     $class = $class . '.php';
     $class = str_replace("\\", "/", $class);
