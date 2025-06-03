@@ -28,14 +28,14 @@ class MODEL extends \Reports\reportModel
 
         $data_head = $d
             ->where($d::id_user,$id_user)
-            ->orderBy("{$d::name_street},{$d::id_street},{$d::int_house},{$d::house}")//'name_street,id,int_house,house'
+            ->orderBy($d::name_street.",".$d::id_street.",".$d::int_house.",".$d::house)//'name_street,id,int_house,house'
             ->select();
 
         $d1 = new View_AFY_accruals_byHouse();
         $data_table = $d1
             ->where($d1::id_user,$id_user)
             ->where($d1::id_street,0,' <> ')
-            ->orderBy("{$d1::name_street},{$d1::id_street},{$d1::int_house},{$d1::house},{$d1::sorting}") //'id_street,int_house,house,sorting'
+            ->orderBy($d1::name_street.",".$d1::id_street.",".$d1::int_house.",".$d1::house.",".$d1::sorting) //'id_street,int_house,house,sorting'
             ->select();
 
 
@@ -58,6 +58,6 @@ class MODEL extends \Reports\reportModel
             ->where($d::id_user,$this->getUser())
             ->where($d::id,0,'<>')
             ->orderBy($d::sorting)
-            ->select("{$d::name},{$d::detailing_general_report}");
+            ->select($d::name.",".$d::detailing_general_report);
     }
 }
