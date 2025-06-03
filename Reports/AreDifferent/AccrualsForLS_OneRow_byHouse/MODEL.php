@@ -9,26 +9,33 @@
 namespace Reports\AreDifferent\AccrualsForLS_OneRow_byHouse;
 
 
+use DB\Connection;
+use DB\View\View_AFY_accruals_byHouse;
+use DB\View\View_AFY_head_byHouse;
+use DB\View\View_AFY_usedTypeAccrual;
+
 class MODEL extends \Reports\reportModel
 {
 
     public function getDataArray()
     {
-        $conn_head = new \backend\Connection();
         $conn_table = new \backend\Connection();
         $ret = Array();
 
         $id_user = $this->getUser();
 
-        $data_head = $conn_head->table('View_AFY_head_byHouse')
-            ->where('id_user',$id_user)
-            ->orderBy('name_street,int_house,house')
+        $d = new View_AFY_head_byHouse();
+
+        $data_head = $d
+            ->where($d::id_user,$id_user)
+            ->orderBy("{$d::name_street},{$d::id_street},{$d::int_house},{$d::house}")//'name_street,id,int_house,house'
             ->select();
 
-        $data_table = $conn_table->table('View_AFY_accruals_byHouse')
-            ->where('id_user',$id_user)
-            ->where('id_street','0',' <> ')
-            ->orderBy('id_street,int_house,house,sorting')
+        $d1 = new View_AFY_accruals_byHouse();
+        $data_table = $d1
+            ->where($d1::id_user,$id_user)
+            ->where($d1::id_street,0,' <> ')
+            ->orderBy("{$d1::name_street},{$d1::id_street},{$d1::int_house},{$d1::house},{$d1::sorting}") //'id_street,int_house,house,sorting'
             ->select();
 
 
@@ -45,12 +52,12 @@ class MODEL extends \Reports\reportModel
 
     public function getTypeAccrual()
     {
-        $conn = new \backend\Connection();
-        return  $conn->table('View_AFY_usedTypeAccrual')
-            ->where('ORG',$this->getORG())
-            ->where('id_user',$this->getUser())
-            ->where('id','0','<>')
-            ->orderBy('sorting')
-            ->select("name,detailing_general_report");
+        $d = new View_AFY_usedTypeAccrual();
+        return  $d
+            ->where($d::ORG,$this->getORG())
+            ->where($d::id_user,$this->getUser())
+            ->where($d::id,0,'<>')
+            ->orderBy($d::sorting)
+            ->select("{$d::name},{$d::detailing_general_report}");
     }
 }
