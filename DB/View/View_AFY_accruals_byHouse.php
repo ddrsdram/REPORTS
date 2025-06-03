@@ -43,6 +43,8 @@ class View_AFY_accruals_byHouse extends Connection
 
 	const id_street =  'id_street';
 
+	const name_street = 'name_street';
+
 	const house =  'house';
 
 	const int_house =  'int_house';
