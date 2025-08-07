@@ -22,6 +22,7 @@ class MODEL extends \Reports\reportModel
 
         $data_head = $conn_head->table('View_AFY_ByTA_head')
             ->where('id_user',$id_user)
+            ->where("F_SUMM","0","<>")
             ->orderBy('name_JEU,name_street,int_house,int_room')
             ->select();
 
@@ -36,7 +37,8 @@ class MODEL extends \Reports\reportModel
         }
         while ($value = $data_table->fetch()){
             $val = Array();
-            $ret[$value['id_LS']]['table'][] = $value;
+            if (array_key_exists($value['id_LS'],$ret))
+                $ret[$value['id_LS']]['table'][] = $value;
         }
         return $ret;
     }
