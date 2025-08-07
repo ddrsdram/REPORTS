@@ -20,12 +20,12 @@ class MODEL extends \Reports\reportModel
 
         $id_user = $this->getUser();
 
-        $data_head = $conn_head->table('View_AFY_head')
+        $data_head = $conn_head->table('View_AFY_ByTA_head')
             ->where('id_user',$id_user)
             ->orderBy('name_JEU,name_street,int_house,int_room')
             ->select();
 
-        $data_table = $conn_table->table('View_AFY_accruals')
+        $data_table = $conn_table->table('View_AFY_ByTA_accruals')
             ->where('id_user',$id_user)
             ->orderBy('id_LS,sorting')
             ->select();
@@ -44,7 +44,7 @@ class MODEL extends \Reports\reportModel
     public function getTypeAccrual()
     {
         $conn = new \backend\Connection();
-        return  $conn->table('View_AFY_usedTypeAccrual')
+        return  $conn->table('View_AFY_ByTA_usedTypeAccrual')
             ->where('ORG',$this->getORG())
             ->where('id_user',$this->getUser())
             ->where('id','0','<>')
