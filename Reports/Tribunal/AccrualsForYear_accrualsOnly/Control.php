@@ -26,6 +26,8 @@ class Control extends \Reports\reportControl
         $dataArray = $this->MODEL->getDataArray();
         $dataTypeAccrual = $this->MODEL->getTypeAccrual();
 
+        $this->VIEW->setMODEL($this->MODEL);
+
         $this->VIEW->setHeadSettings($this->MODEL->getHeadArray());
 
         $this->VIEW->setData($dataArray);

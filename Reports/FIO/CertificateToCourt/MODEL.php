@@ -30,6 +30,13 @@ class MODEL extends \Reports\reportModel
             $returnArray[$key] = $value;
         }
 
+        $d = new \DB\Table\tribunal_settings();
+        $arr = $d->where($d::ORG,$this->getORG())
+            ->select()->fetch();
+        foreach ($arr as $key => $value){
+            $returnArray[$key] = $value;
+        }
+
         $FIO =  $transName->q(
             $this->mb_strtoupper_first($returnArray['fam'])." ".
             $this->mb_strtoupper_first($returnArray['im'])." ".
