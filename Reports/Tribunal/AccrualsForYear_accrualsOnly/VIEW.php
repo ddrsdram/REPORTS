@@ -95,9 +95,11 @@ class VIEW extends \Reports\reportView
 
     public function bottomReport()
     {
-        $bookkeeper_KVPL = $this->headSettings2['bookkeeper_KVPL'];
-        $post = $this->headSettings2['AccrualsForYear'];
-        $this->insertValue(1,3,"$post  ________________________________ $bookkeeper_KVPL");
+        $settings = $this->MODEL->getSettingsTribunal();
+        $post = $settings['Post'];
+        $Signatory = $settings['Signatory'];
+
+        $this->insertValue(1,3,"$post  ________________________________ $Signatory");
     }
 
     /**

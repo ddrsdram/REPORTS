@@ -62,4 +62,12 @@ class MODEL extends \Reports\reportModel
             ->orderBy('sorting')
             ->select("name,detailing_general_report");
     }
+
+
+    public function getSettingsTribunal()
+    {
+        $d = new \DB\Table\tribunal_settings();
+        return $d->where($d::ORG,$this->getORG())
+            ->select()->fetch();
+    }
 }

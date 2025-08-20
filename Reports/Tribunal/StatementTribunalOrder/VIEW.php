@@ -17,7 +17,12 @@ class VIEW extends \Reports\reportView
     private $style2 = Array();
     private $style3 = Array();
     private $countOfHuman;
+    private $listFIO = '';
     const Left = 2000;
+    /**
+     * @var MODEL
+     */
+    public $MODEL;
     function init()
     {
         $path = $_SERVER['DOCUMENT_ROOT'];
@@ -154,10 +159,11 @@ class VIEW extends \Reports\reportView
         $this->addText("На основании вышеизложенного и руководствуясь ст.ст. 153, 154, 155 ЖК РФ, ст.ст. 779, 782, 1102, 1105 ГК РФ, ст.ст. 122-124 ГПК РФ.",false,true);
 
         $this->addText("ПРОШУ:",true,true);
-        $solidarity = "солидарное";
-        if ($this->countOfHuman == 1) // если один человек в приказе то не используем слово "солиданое" в сочитании "солиданое взыскание"
-            $solidarity = "";
-        $this->addText("Выдать судебный приказ на $solidarity взыскание в пользу {$this->H['name_organization_full']}:",false,true);
+        $solidarity = "";
+        if ($this->countOfHuman > 1) // если один человек в приказе то не используем слово "солиданое" в сочитании "солиданое взыскание"
+            $solidarity = "солидарное взыскание с $this->listFIO";
+
+        $this->addText("Выдать судебный приказ на $solidarity  в пользу {$this->H['name_organization_full']}:",false,true);
 
 
         $this->addText("1.	Задолженность по оплате за обслуживание жилья и текущий ремонт мест общего пользования в размере: {$this->H['accrual']} р.  за период c {$this->H['dateStart']} по {$this->H['dateEnd']} гг" .
@@ -193,29 +199,45 @@ class VIEW extends \Reports\reportView
     }
 
 
+
     private function addPeopleInToHeader()
     {
+        ini_set('display_errors', '1');
+        ini_set('display_startup_errors', '1');
+        error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT );
+
         $this->countOfHuman = 0;
+        $this->listFIO = '';
+        $transName = new \models\NameCaseLib\NCLNameCaseRu();
+
         foreach ($this->data as  $key => $t1){
-            $textRun = $this->section->createTextRun($this->style3);
-            $textRun->addText("Должник: ",$this->SF_bold);
-            $textRun->addText("{$t1['FIO']} {$t1['birthday']} г.р.",$this->SF_Norm);
+            if ($t1['years'] >= 18){
+                $FIO = '';
+                $FIO =  $transName->q($t1['FIO'], \models\NameCaseLib\NCL\NCL::$RODITLN);
 
-            $textRun = $this->section->createTextRun($this->style3);
-            $textRun->addText("Уроженец (ка): ",$this->SF_bold);
-            $textRun->addText("{$t1['caption']}",$this->SF_Norm);
+                $this->listFIO = $this->listFIO . "$FIO {$t1['birthday']}, ";
 
-            $textRun = $this->section->createTextRun($this->style3);
-            $textRun->addText("Паспорт: ",$this->SF_bold);
-            $textRun->addText("{$t1['s_doc']} {$t1['n_doc']} {$t1['data_create']} {$t1['issued_by']}",$this->SF_Norm);
+                $textRun = $this->section->createTextRun($this->style3);
+                $textRun->addText("Должник: ",$this->SF_bold);
+                $textRun->addText("{$t1['FIO']} {$t1['birthday']} г.р.",$this->SF_Norm);
 
-            $textRun = $this->section->createTextRun($this->style3);
-            $textRun->addText("Проживающий:",$this->SF_bold);
-            $textRun->addText($this->H['addressHouse'],$this->SF_Norm);
+                $textRun = $this->section->createTextRun($this->style3);
+                $textRun->addText("Уроженец (ка): ",$this->SF_bold);
+                $textRun->addText("{$t1['caption']}",$this->SF_Norm);
 
-            $this->addHeadText('',false);
-            $this->countOfHuman ++;
+                $textRun = $this->section->createTextRun($this->style3);
+                $textRun->addText("Паспорт: ",$this->SF_bold);
+                $textRun->addText("{$t1['s_doc']} {$t1['n_doc']} {$t1['data_create']} {$t1['issued_by']}",$this->SF_Norm);
+
+                $textRun = $this->section->createTextRun($this->style3);
+                $textRun->addText("Проживающий:",$this->SF_bold);
+                $textRun->addText($this->H['addressHouse'],$this->SF_Norm);
+
+                $this->addHeadText('',false);
+                $this->countOfHuman ++;
+            }
         }
+        $this->listFIO = substr($this->listFIO,0,-2);
     }
 
     private function addPeopleInToBody()

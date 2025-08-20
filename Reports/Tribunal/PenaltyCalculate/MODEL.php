@@ -21,6 +21,13 @@ class MODEL extends \Reports\reportModel
     {
         $data = parent::getHeadArray();
         $data['dateStart'] = $this->dateStart;
+
+        $d = new \DB\Table\tribunal_settings();
+        $arr = $d->where($d::ORG,$this->getORG())
+            ->select()->fetch();
+        foreach ($arr as $key => $value){
+            $data[$key] = $value;
+        }
         return $data;
     }
 
