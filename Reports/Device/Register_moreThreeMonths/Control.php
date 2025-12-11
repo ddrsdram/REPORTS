@@ -7,9 +7,9 @@ class Control extends \Reports\reportControl
     function __construct($id_report)
     {
         parent::__construct($id_report);
-        $this->nameReport = "Реестр приборов по которым не пердаются показания более 3х месяцев";
+        $this->nameReport = "Реестр приборов по которым не передаются показания более 3х месяцев";
         $this->extensionName = ".xlsx";
-        $this->descriptionReport = "Реестр приборов по которым не пердаются показания более 3х месяцев";
+        $this->descriptionReport = "Реестр приборов по которым не передаются показания более 3х месяцев";
         $this->manageTable = 'list_device';
 
         $this->VIEW = new VIEW();
