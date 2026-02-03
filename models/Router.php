@@ -20,7 +20,7 @@ class Router
         $this->argument_array = 0;
         $this->argument_array = array();
 
-        set_time_limit(350);
+        set_time_limit(0);
         $this->dirSource = $_SERVER['DOCUMENT_ROOT'].'ImpExp/';
 
         $this->wait = -1;
