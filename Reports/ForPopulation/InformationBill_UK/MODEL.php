@@ -76,7 +76,7 @@ class MODEL extends \Reports\reportModel
 
             $val['value'] = $value['value1'];
 
-            if (in_array($value['id_type_calculate'] , Array(16,17,2))){
+            if (in_array($value['id_type_calculate'] , Array(16,17,2,6))){
                 $val['value'] = $value['value2'] - $value['value1'];
             }
 
