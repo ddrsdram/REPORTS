@@ -31,7 +31,7 @@ spl_autoload_register(function ($class) {
                 break;
 
             case "Devmakis":
-                $value = str_replace("Devmakis","External",$value);
+                $value = str_replace("Devmakis","models",$value);
                 break;
 
             case "SbWereWolf":
