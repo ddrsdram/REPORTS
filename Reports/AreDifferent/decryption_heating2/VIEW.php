@@ -382,12 +382,12 @@ class VIEW extends \Reports\reportView
         $this->insertValue($this->gRow,35,"=O(0)*AC(0)",true);
         $this->insertValue($this->gRow,36,"=U(0)-AF(0)",true);
         //$this->insertValue($this->gRow,37,"",true);
-        $this->insertValue($this->gRow,38,"=AJ(0)/1.2",true);
-        $this->insertValue($this->gRow,39,"=(AD(0)*L(0)-(W(0)*M(0)+Z(0)*N(0)))/1.2",true);
+        $this->insertValue($this->gRow,38,"=AJ(0)/1.22",true);
+        $this->insertValue($this->gRow,39,"=(AD(0)*L(0)-(W(0)*M(0)+Z(0)*N(0)))/1.22",true);
         $this->insertValue($this->gRow,40,"=AM(0)-AL(0)",true);
         $this->insertValue($this->gRow,41,"=(X(0)*M(0)+AA(0)*N(0))",true);
         $this->insertValue($this->gRow,42,"=(X(0)+AA(0))*O(0)",true);
-        $this->insertValue($this->gRow,43,"=(AP(0)-AO(0))/1.2",true);
+        $this->insertValue($this->gRow,43,"=(AP(0)-AO(0))/1.22",true);
         $this->insertValue($this->gRow,44,"=AL(0)-AQ(0)",true);
 
 
