@@ -7,50 +7,55 @@ use \DB\Connection;
 
 class View_BB_Head extends Connection
 {
-	const id_user =  'id_user';
+    const id_user =  'id_user';
 
-	const id_LS =  'id_LS';
+    const id_LS =  'id_LS';
 
-	const name_month =  'name_month';
+    const name_month =  'name_month';
 
-	const name_JEU =  'name_JEU';
+    const name_JEU =  'name_JEU';
 
-	const status_street =  'status_street';
+    const status_street =  'status_street';
 
-	const name_street =  'name_street';
+    const id_street =  'id_street';
 
-	const house =  'house';
+    const name_street =  'name_street';
 
-	const room =  'room';
+    const house =  'house';
 
-	const person =  'person';
+    const region =  'region';
 
-	const area =  'area';
+    const room =  'room';
 
-	const person_act =  'person_act';
+    const person =  'person';
 
-	const person_owner =  'person_owner';
+    const area =  'area';
 
-	const person_tmp =  'person_tmp';
+    const person_act =  'person_act';
 
-	const soc_norm =  'soc_norm';
+    const person_owner =  'person_owner';
 
-	const saldoStart =  'saldoStart';
+    const person_tmp =  'person_tmp';
 
-	const acruals =  'acruals';
+    const soc_norm =  'soc_norm';
 
-	const payment =  'payment';
+    const saldoStart =  'saldoStart';
 
-	const saldoEnd =  'saldoEnd';
+    const acruals =  'acruals';
 
-	const acruals32 =  'acruals32';
+    const payment =  'payment';
 
-	const delta =  'delta';
+    const saldoEnd =  'saldoEnd';
 
-	const full_accruals =  'full_accruals';
+    const acruals32 =  'acruals32';
 
-	const iHouse =  'iHouse';
+    const delta =  'delta';
 
-	const iRoom =  'iRoom';
+    const full_accruals =  'full_accruals';
 
+    const iHouse =  'iHouse';
+
+    const iRoom =  'iRoom';
+
+    const penalty =  'penalty';
 }

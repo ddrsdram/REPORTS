@@ -6,7 +6,7 @@
  * Time: 16:00
  */
 
-namespace Reports\ForPopulation\InformationBill_UK;
+namespace Reports\ForPopulation\InformationBill_UK_QrCode;
 
 
 use DB\Table\requisites;
@@ -17,6 +17,7 @@ class MODEL extends \Reports\reportModel
 
     public function getDataArray()
     {
+
         $conn_head = new View_BB_Head();
         $conn_table = new \backend\Connection();
         $conn_total = new \backend\Connection();
@@ -37,7 +38,24 @@ class MODEL extends \Reports\reportModel
                 .View_BB_Head::iRoom.","
                 .View_BB_Head::id_LS)
             ->select();
+        $old_region = 0;
+        $old_id_street = 0;
+        $old_house = '_';
+
         while ($value = $data_head->fetch()){
+            $region = $value[$conn_head::region];
+            $id_street = $value[$conn_head::id_street];
+            $house = $value[$conn_head::house];
+
+            if ("{$old_region}_{$old_id_street}_$old_house" != "{$region}_{$id_street}_$house"){
+                $old_region = $value[$conn_head::region];
+                $old_id_street = $value[$conn_head::id_street];
+                $old_house = $value[$conn_head::house];
+                $value['QR_MCM'] = $this->getQrCodeData($old_region,$old_id_street,$old_house,"Link_MainChanelMAX");
+                $value['QR_HM'] = $this->getQrCodeData($old_region,$old_id_street,$old_house,"Link_HouseManage");
+
+            }
+
             $summa = (int)$value['saldoEnd'] * 100;
             $value['QR_SBER'] = "ST00012|Name={$requisites['name_organization']}|PersonalAcc={$requisites['RSCH']}|BankName={$requisites['name_bank']}|BIC={$requisites['BIK']}|CorrespAcc={$requisites['KSCH']}|Sum={$summa}|persAcc={$value['id_LS']}|PayeeINN={$requisites['INN']}|";
             //$value['QR_SBER'] = 'ST00012|Name=ООО "Беловский ЦКП"|PersonalAcc=40702810232220000702|BankName=Филиал ПАО "Банк Уралсиб" в г.Новосибирск|BIC=045004725|CorrespAcc=30101810400000000725|Sum=381492|persAcc=100825|PayeeINN=4202024530|SERVICENAME=24540|';
@@ -85,7 +103,7 @@ class MODEL extends \Reports\reportModel
 
             $val['value'] = $value['value1'];
 
-            if (in_array($value['id_type_calculate'] , Array(16,17,2,6,25))){
+            if (in_array($value['id_type_calculate'] , Array(16,17,2,6))){
                 $val['value'] = $value['value2'] - $value['value1'];
             }
 
