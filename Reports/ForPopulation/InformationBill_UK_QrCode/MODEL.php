@@ -9,15 +9,17 @@
 namespace Reports\ForPopulation\InformationBill_UK_QrCode;
 
 
+use DB\Connect;
+use DB\Connection;
 use DB\Table\requisites;
 use DB\View\View_BB_Head;
 
 class MODEL extends \Reports\reportModel
 {
-
+    public $id_month;
     public function getDataArray()
     {
-
+        $this->id_month = $this->getHeadArray()['id_month'];
         $conn_head = new View_BB_Head();
         $conn_table = new \backend\Connection();
         $conn_total = new \backend\Connection();
@@ -26,6 +28,7 @@ class MODEL extends \Reports\reportModel
 
         $d = new requisites();
         $requisites = $d->where($d::ORG,$this->getORG())
+            ->where($d::id_month,$this->id_month)
             ->select()
             ->fetch();
 
@@ -38,22 +41,15 @@ class MODEL extends \Reports\reportModel
                 .View_BB_Head::iRoom.","
                 .View_BB_Head::id_LS)
             ->select();
-        $old_region = 0;
-        $old_id_street = 0;
-        $old_house = '_';
 
+        $id_LS_mainHouse_old = 0;
+        $URL = "";
         while ($value = $data_head->fetch()){
-            $region = $value[$conn_head::region];
-            $id_street = $value[$conn_head::id_street];
-            $house = $value[$conn_head::house];
+            $id_LS_mainHouse = $value['id_LS_mainHouse'];
 
-            if ("{$old_region}_{$old_id_street}_$old_house" != "{$region}_{$id_street}_$house"){
-                $old_region = $value[$conn_head::region];
-                $old_id_street = $value[$conn_head::id_street];
-                $old_house = $value[$conn_head::house];
-                $value['QR_MCM'] = $this->getQrCodeData($old_region,$old_id_street,$old_house,"Link_MainChanelMAX");
-                $value['QR_HM'] = $this->getQrCodeData($old_region,$old_id_street,$old_house,"Link_HouseManage");
-
+            if ($id_LS_mainHouse_old != $id_LS_mainHouse){
+                $id_LS_mainHouse = $value['id_LS_mainHouse'];
+                $URL = $this->getQrCodeData($id_LS_mainHouse);
             }
 
             $summa = (int)$value['saldoEnd'] * 100;
@@ -73,7 +69,7 @@ class MODEL extends \Reports\reportModel
                 "QrCodeOffsetX" => 0,
                 "QrCodeOffsetY" => 0,
                 "sizePixelForQrCode" => 140,
-                "data"=>false
+                "data"=>$URL
             );
             $ret[$value['id_LS']] = $value;
             $ret[$value['id_LS']]['sod_table'] = Array();
@@ -162,7 +158,7 @@ class MODEL extends \Reports\reportModel
         $col = 0;
         $bStr = false;
         $val = Array('caption1'=>'','name_type_accrual1'=>"","summa1"=>'',
-                    'caption2'=>'','name_type_accrual2'=>"","summa2"=>'');
+            'caption2'=>'','name_type_accrual2'=>"","summa2"=>'');
         $id_LS = 0;
         while ($value = $data_recalc->fetch()){
 
@@ -172,7 +168,7 @@ class MODEL extends \Reports\reportModel
                     $bStr = false;
                 }
                 $val = Array('caption1'=>'','name_type_accrual1'=>"","summa1"=>'',
-                             'caption2'=>'','name_type_accrual2'=>"","summa2"=>'');
+                    'caption2'=>'','name_type_accrual2'=>"","summa2"=>'');
                 $col = 0;
                 $LS_OLD1 = $value['id_LS'];
                 $bStr = true;
@@ -181,7 +177,7 @@ class MODEL extends \Reports\reportModel
             if ($col > 2) {
                 $col = 1;
             }
-            
+
             if ($col == 2) {
                 $LS_OLD1 = 0;
             }
@@ -200,8 +196,15 @@ class MODEL extends \Reports\reportModel
         return $ret;
     }
 
-    private function getQrCodeData($old_region,$old_id_street,$old_house,$var)
+    private function getQrCodeData($id_LS_mainHouse)
     {
-        return "";
+        $d = new Connect();
+        $d->table("LS_head_requisites")
+            ->where("ORG",$this->getORG())
+            ->where("id_month",$this->id_month)
+            ->where("id_LS",$id_LS_mainHouse)
+            ->where("id_requisites","9")
+            ->select("value_char");
+        return  $d->fetchField("value_char");
     }
 }
