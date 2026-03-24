@@ -11,6 +11,7 @@ namespace Reports\ForPopulation\InformationBill_UK_QrCode;
 
 use DB\Connect;
 use DB\Connection;
+use DB\Table\LS_head_requisites;
 use DB\Table\requisites;
 use DB\View\View_BB_Head;
 
@@ -26,9 +27,9 @@ class MODEL extends \Reports\reportModel
         $conn_recalc = new \backend\Connection();
         $ret = Array();
 
-        $d = new requisites();
-        $requisites = $d->where($d::ORG,$this->getORG())
-            ->where($d::id_month,$this->id_month)
+        $r = new requisites();
+        $requisites = $r->where($r::ORG,$this->getORG())
+            ->where($r::id_month,$this->id_month)
             ->select()
             ->fetch();
 
@@ -45,19 +46,19 @@ class MODEL extends \Reports\reportModel
         $id_LS_mainHouse_old = 0;
         $URL = "";
         while ($value = $data_head->fetch()){
-            $id_LS_mainHouse = $value['id_LS_mainHouse'];
+            $id_LS_mainHouse = $value[View_BB_Head::id_LS_mainHouse];
 
             if ($id_LS_mainHouse_old != $id_LS_mainHouse){
-                $id_LS_mainHouse = $value['id_LS_mainHouse'];
+                $id_LS_mainHouse = $value[View_BB_Head::id_LS_mainHouse];
                 $URL = $this->getQrCodeData($id_LS_mainHouse);
             }
 
-            $summa = (int)$value['saldoEnd'] * 100;
+            $summa = (int)$value[View_BB_Head::saldoEnd] * 100;
             $value['QR_SBER'] = Array(
                 "QrCodeOffsetX" => 0,
                 "QrCodeOffsetY" => 0,
                 "sizePixelForQrCode" => 200,
-                "data"=>"ST00012|Name={$requisites['name_organization']}|PersonalAcc={$requisites['RSCH']}|BankName={$requisites['name_bank']}|BIC={$requisites['BIK']}|CorrespAcc={$requisites['KSCH']}|Sum={$summa}|persAcc={$value['id_LS']}|PayeeINN={$requisites['INN']}|"
+                "data"=>"ST00012|Name={$requisites[$r::name_organization]}|PersonalAcc={$requisites[$r::RSCH]}|BankName={$requisites[$r::name_bank]}|BIC={$requisites[$r::BIK]}|CorrespAcc={$requisites[$r::KSCH]}|Sum={$summa}|persAcc={$value[View_BB_Head::id_LS]}|PayeeINN={$requisites[$r::INN]}|"
             );
             $value['QR_MainChannel'] = Array(
                 "QrCodeOffsetX" => 0,
@@ -198,13 +199,13 @@ class MODEL extends \Reports\reportModel
 
     private function getQrCodeData($id_LS_mainHouse)
     {
-        $d = new Connect();
-        $d->table("LS_head_requisites")
-            ->where("ORG",$this->getORG())
-            ->where("id_month",$this->id_month)
-            ->where("id_LS",$id_LS_mainHouse)
-            ->where("id_requisites","9")
-            ->select("value_char");
-        return  $d->fetchField("value_char");
+        $d = new LS_head_requisites();
+        $d
+            ->where($d::ORG,$this->getORG())
+            ->where($d::id_month,$this->id_month)
+            ->where($d::id_LS,$id_LS_mainHouse)
+            ->where($d::id_requisites,9)
+            ->select($d::value_char);
+        return  $d->fetchField($d::value_char);
     }
 }
