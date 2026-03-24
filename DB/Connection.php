@@ -90,7 +90,8 @@ abstract class Connection
         } catch (\PDOException $e) {
             print "===================================error 22=========================================</br>";
             //print $this->arrayConnectionSettings["serverName"] . ";Database=" . $this->arrayConnectionSettings["dataBase"]."</br>";
-            //print $e->getMessage();
+            print_r($this->arrayConnectionSettings);
+            print $e->getMessage();
             exit;
         }
     }

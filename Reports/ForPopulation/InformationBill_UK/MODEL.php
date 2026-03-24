@@ -39,7 +39,12 @@ class MODEL extends \Reports\reportModel
             ->select();
         while ($value = $data_head->fetch()){
             $summa = (int)$value['saldoEnd'] * 100;
-            $value['QR_SBER'] = "ST00012|Name={$requisites['name_organization']}|PersonalAcc={$requisites['RSCH']}|BankName={$requisites['name_bank']}|BIC={$requisites['BIK']}|CorrespAcc={$requisites['KSCH']}|Sum={$summa}|persAcc={$value['id_LS']}|PayeeINN={$requisites['INN']}|";
+            $value['QR_SBER'] = Array(
+                "QrCodeOffsetX" => 0,
+                "QrCodeOffsetY" => 0,
+                "sizePixelForQrCode" => 200,
+                "data"=>"ST00012|Name={$requisites['name_organization']}|PersonalAcc={$requisites['RSCH']}|BankName={$requisites['name_bank']}|BIC={$requisites['BIK']}|CorrespAcc={$requisites['KSCH']}|Sum={$summa}|persAcc={$value['id_LS']}|PayeeINN={$requisites['INN']}|"
+            );
             //$value['QR_SBER'] = 'ST00012|Name=ООО "Беловский ЦКП"|PersonalAcc=40702810232220000702|BankName=Филиал ПАО "Банк Уралсиб" в г.Новосибирск|BIC=045004725|CorrespAcc=30101810400000000725|Sum=381492|persAcc=100825|PayeeINN=4202024530|SERVICENAME=24540|';
             $ret[$value['id_LS']] = $value;
             $ret[$value['id_LS']]['sod_table'] = Array();

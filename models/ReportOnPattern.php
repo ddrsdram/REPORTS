@@ -530,6 +530,10 @@ class ReportOnPattern
                         $val1 = str_replace("QrCODE_","",$val1);
                         $typeData = 'QrCODE';
                     }
+                    if (substr($val1,1,9)=='SpecData_'){
+                        $val1 = str_replace("SpecData_","",$val1);
+                        $typeData = 'SpecData_';
+                    }
 
                     if (substr($val1,1,5)=='SHEET'){
                         // отрезение создержимого постранично используется в  namespace Reports\ForPopulation\advert;
@@ -568,7 +572,9 @@ class ReportOnPattern
                 if ($typeData == 'QrCODE'){
                     $this->addQrCode($dstCell,$val);
                 }
-
+                if ($typeData == 'SpecData_'){
+                    $this->addSpecData($dstCell,$val);
+                }
                 if ($typeData == 'All'){
                     if (! is_array($val))
                         $destSheet->setCellValue($dstCell, $val);
@@ -1015,24 +1021,33 @@ class ReportOnPattern
 
     private function addQrCode($cells,$data)
     {
-        $Obj_QR = new \models\QRcode\QR;
+        ErrorLog::saveError($data);
+        if ($data['data'] !== false){
+            $Obj_QR = new \models\QRcode\QR;
 
-        $Obj_QR->QR($data,QR_TypeField::String,QR_Level::QRLevel_Q,2);
-        $Obj_QR->setSizeInPixels($this->sizePixelForQrCode);
-        $gdImage = $Obj_QR->getQRCodeImage();
+            $Obj_QR->QR($data['data'],QR_TypeField::String,QR_Level::QRLevel_Q,2);
+            $Obj_QR->setSizeInPixels($data['sizePixelForQrCode']);
+            $gdImage = $Obj_QR->getQRCodeImage();
 
-        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing(); // Новый экземпляр "Рисоваки")
-        $drawing->setCoordinates($cells); // Координаты картинки
-        $gdImage = imagecreatefromstring($gdImage);
+            $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing(); // Новый экземпляр "Рисоваки")
+            $drawing->setCoordinates($cells); // Координаты картинки
+            $gdImage = imagecreatefromstring($gdImage);
 
-        $drawing->setImageResource($gdImage);
+            $drawing->setImageResource($gdImage);
 
-        $drawing->setRenderingFunction(
-            \PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing::RENDERING_JPEG
-        );
-        $drawing->setMimeType(\PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing::MIMETYPE_JPEG);
-        $drawing->setOffsetX($this->QrCodeOffsetX);
-        $drawing->setOffsetY($this->QrCodeOffsetY);
-        $drawing->setWorksheet($this->SheetResult); // Нужная вкладка
+            $drawing->setRenderingFunction(
+                \PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing::RENDERING_JPEG
+            );
+            $drawing->setMimeType(\PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing::MIMETYPE_JPEG);
+            $drawing->setOffsetX($data['QrCodeOffsetX']);
+            $drawing->setOffsetY($data['QrCodeOffsetY']);
+            $drawing->setWorksheet($this->SheetResult); // Нужная вкладка
+            }
+    }
+
+    private function addSpecData($cells,$data)
+    {
+        $val = $data['data'];
+        $this->SheetResult->setCellValue($cells, $val);
     }
 }
