@@ -25,6 +25,8 @@ class View_BB_Head extends Connection
 
     const region =  'region';
 
+    const id_LS_mainHouse =  'id_LS_mainHouse';
+
     const room =  'room';
 
     const person =  'person';
@@ -58,4 +60,5 @@ class View_BB_Head extends Connection
     const iRoom =  'iRoom';
 
     const penalty =  'penalty';
+
 }
