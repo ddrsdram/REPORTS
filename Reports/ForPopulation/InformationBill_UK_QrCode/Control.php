@@ -9,9 +9,9 @@ class Control extends \Reports\reportControl
     {
         parent::__construct($id_report);
 
-        $this->nameReport = "Извещение УК (3 на лист) ";
+        $this->nameReport = "Извещение УК с Qr -кодами ";
         $this->extensionName = ".xlsx";
-        $this->descriptionReport = "Извещение УК (3 на лист) ";
+        $this->descriptionReport = "Извещение УК с Qr -кодами";
         $this->manageTable = 'list_LS_Bill';
 
         $this->MODEL = new MODEL($this->id_report);

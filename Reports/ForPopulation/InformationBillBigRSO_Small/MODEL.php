@@ -29,7 +29,16 @@ class MODEL extends \Reports\reportModel
             ->select();
         while ($value = $data_head->fetch()){
             $summa = (int)$value['saldoEnd'] * 100;
-            $value['QR_SBER'] = "ST00012|Name={$requisites['name_organization']}|PersonalAcc={$requisites['RSCH']}|BankName={$requisites['name_bank']}|BIC={$requisites['BIK']}|CorrespAcc={$requisites['KSCH']}|Sum={$summa}|persAcc={$value['id_LS']}|PayeeINN={$requisites['INN']}|";
+            $value['QR_SBER'] = Array(
+                "QrCodeOffsetX" => 30,
+                "QrCodeOffsetY" => 2,
+                "sizePixelForQrCode" => 185,
+                "data"=>"ST00012|Name={$requisites['name_organization']}|PersonalAcc={$requisites['RSCH']}|BankName={$requisites['name_bank']}|BIC={$requisites['BIK']}|CorrespAcc={$requisites['KSCH']}|Sum={$summa}|persAcc={$value['id_LS']}|PayeeINN={$requisites['INN']}|"
+            );
+            $value['text1'] = Array(
+                "fontSize" => 12,
+                "data"=>$requisites['msgMain']
+            );
             $ret[$value['id_LS']] = $value;
             $ret[$value['id_LS']]['table_recalculate'] = Array();
             $ret[$value['id_LS']]['communal_table']  = Array();
