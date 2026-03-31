@@ -61,15 +61,17 @@ class MODEL extends \Reports\reportModel
                 "data"=>"ST00012|Name={$requisites[$r::name_organization]}|PersonalAcc={$requisites[$r::RSCH]}|BankName={$requisites[$r::name_bank]}|BIC={$requisites[$r::BIK]}|CorrespAcc={$requisites[$r::KSCH]}|Sum={$summa}|persAcc={$value[View_BB_Head::id_LS]}|PayeeINN={$requisites[$r::INN]}|"
             );
             $value['QR_MainChannel'] = Array(
-                "QrCodeOffsetX" => 0,
-                "QrCodeOffsetY" => 0,
+                "QrCodeOffsetX" => 42,
+                "QrCodeOffsetY" => 2,
                 "sizePixelForQrCode" => 140,
+                "cropPixels"=>10,
                 "data"=>$requisites['msgMain']
             );
             $value['QR_HomeChannel'] = Array(
-                "QrCodeOffsetX" => 0,
-                "QrCodeOffsetY" => 0,
+                "QrCodeOffsetX" => 45,
+                "QrCodeOffsetY" => 2,
                 "sizePixelForQrCode" => 140,
+                "cropPixels"=>10,
                 "data"=>$URL
             );
             $ret[$value['id_LS']] = $value;

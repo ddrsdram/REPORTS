@@ -1026,8 +1026,12 @@ class ReportOnPattern
             $Obj_QR = new \models\QRcode\QR;
 
             $Obj_QR->QR($data['data'],QR_TypeField::String,QR_Level::QRLevel_Q,2);
+
             $Obj_QR->setSizeInPixels($data['sizePixelForQrCode']);
             $gdImage = $Obj_QR->getQRCodeImage();
+
+            if (array_key_exists("cropPixels",$data))
+                $gdImage = $this->cropPixels($gdImage,$data['cropPixels']);
 
             $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing(); // Новый экземпляр "Рисоваки")
             $drawing->setCoordinates($cells); // Координаты картинки
@@ -1044,7 +1048,29 @@ class ReportOnPattern
             $drawing->setWorksheet($this->SheetResult); // Нужная вкладка
             }
     }
+    private function cropPixels($gdImage,$cropPixels)
+    {
+        $im = new \Imagick();
+        $im->readImageBlob($gdImage);
 
+        $im->setImageUnits(1); //Declare the units for resolution.
+        $im->setImageFormat('jpeg');
+        $im->setImageCompression(8);// \Imagick::COMPRESSION_JPEG
+        $im->setImageCompressionQuality(80);
+        $im->setImageUnits(1); //Declare the units for resolution.
+        $im->setImageFormat('jpeg');
+        $im->setImageCompression(8);// \Imagick::COMPRESSION_JPEG
+        $im->setImageCompressionQuality(80);
+
+        $size = $im->getImageGeometry();
+        $height = $size['height'];
+        $width = $size['width'];
+        $im->cropImage($width-($cropPixels*2),$height-($cropPixels*2), $cropPixels,$cropPixels);
+
+        $gdImage = $im->getImageBlob();
+
+        return $gdImage;
+    }
     private function addSpecData($cells,$data)
     {
         $val = $data['data'];
