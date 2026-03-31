@@ -423,51 +423,49 @@ class VIEW extends \Reports\reportView
         $this->gRow = $this->gRow + 5;
 
         // подписи для субсидии
-        $this->insertValue($this->gRow,1,"Подписи :",false);
+        $this->insertValue($this->gRow,1,"Получатель субсидии:",false);
         $this->gRow ++;
-        $this->insertValue($this->gRow,1,"Производитель :",false);
         $this->gRow ++;
-        $this->insertValue($this->gRow,1,'ООО "ЭнергоКомпания"',false);
-        $this->insertValue($this->gRow,33,'Служба:',false);
+        $this->insertValue($this->gRow,33,'Распорядитель субсидии:',false);
         $this->gRow ++;
-        $this->insertValue($this->gRow,33,'Директор МКУ "СЗ ЖКХ"',false);
-        $this->insertValue($this->gRow,36,' ______________ Д.А.Соловьев',false);
-        $this->gRow ++;
-        $this->insertValue($this->gRow,1,"______________________ Д.В.Игошин",false);
+        $this->insertValue($this->gRow,1,'Генеральный директор ООО"ЭК"________________ Игошин Д.В.',false);
+        $this->insertValue($this->gRow,33,'Начальник УЖКиДК АБГО',false);
+        $this->insertValue($this->gRow,36,'  ______________ Соловьев Д.А.',false);
         $this->gRow ++;
         $this->gRow ++;
         $this->insertValue($this->gRow,1,"Нач.ПЭО________________ Л.Д.Сафонова",false);
+        $this->gRow ++;
         $this->insertValue($this->gRow,33,'Начальник ПЭО',false);
-        $this->insertValue($this->gRow,36,'______________ М.Е.Праздников',false);
+        $this->insertValue($this->gRow,36,'______________Кочегаров Д.В.',false);
         $this->gRow ++;
+        $this->insertValue($this->gRow,1,"Вед.специалист по ПСХ________________ Е.В.Долгова",false);
         $this->gRow ++;
-        $this->insertValue($this->gRow,1,"Вед.специалист по ПСХ________________ Д.С.Карпенко",false);
-        $this->insertValue($this->gRow,33,'Главный  инженер',false);
-        $this->insertValue($this->gRow,36,'______________Н.П.Улаев',false);
+        $this->insertValue($this->gRow,33,'Начальник ПЭО',false);
+        $this->insertValue($this->gRow,36,'______________Праздников М.Е.',false);
 
-        // подписи для субвенции
-        $this->gRow = $this->gRow + 5;
-        $this->insertValue($this->gRow,1,"Заместитель Главы Беловского",false);
-        $this->gRow ++;
-        $this->insertValue($this->gRow,1,"городского округа по ЖКХ ",false);
-        $this->insertValue($this->gRow,32,"С.В.Смараков ",false);
-        $this->gRow ++;
-        $this->gRow ++;
-        $this->gRow ++;
-        $this->gRow ++;
-        $this->gRow ++;
-        $this->insertValue($this->gRow,1,"Начальник управления Бухгалтерского учета",false);
-        $this->gRow ++;
-        $this->insertValue($this->gRow,1,"и отчетности Администрации Беловского городского округа ",false);
-        $this->insertValue($this->gRow,32,"Н.А.Овчинникова",false);
-        $this->gRow ++;
-        $this->gRow ++;
-        $this->gRow ++;
-        $this->gRow ++;
-        $this->gRow ++;
-        $this->insertValue($this->gRow,1,"Исполнитель М.Е.Праздников",false);
-        $this->gRow ++;
-        $this->insertValue($this->gRow,1,"8(38452)61515",false);
+//        // подписи для субвенции
+//        $this->gRow = $this->gRow + 5;
+//        $this->insertValue($this->gRow,1,"Заместитель Главы Беловского",false);
+//        $this->gRow ++;
+//        $this->insertValue($this->gRow,1,"городского округа по ЖКХ ",false);
+//        $this->insertValue($this->gRow,32,"С.В.Смараков ",false);
+//        $this->gRow ++;
+//        $this->gRow ++;
+//        $this->gRow ++;
+//        $this->gRow ++;
+//        $this->gRow ++;
+//        $this->insertValue($this->gRow,1,"Начальник управления Бухгалтерского учета",false);
+//        $this->gRow ++;
+//        $this->insertValue($this->gRow,1,"и отчетности Администрации Беловского городского округа ",false);
+//        $this->insertValue($this->gRow,32,"Н.А.Овчинникова",false);
+//        $this->gRow ++;
+//        $this->gRow ++;
+//        $this->gRow ++;
+//        $this->gRow ++;
+//        $this->gRow ++;
+//        $this->insertValue($this->gRow,1,"Исполнитель М.Е.Праздников",false);
+//        $this->gRow ++;
+//        $this->insertValue($this->gRow,1,"8(38452)61515",false);
     }
 
 
