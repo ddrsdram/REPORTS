@@ -432,6 +432,8 @@ class VIEW extends \Reports\reportView
         $this->insertValue($this->gRow,33,'Начальник УЖКиДК АБГО',false);
         $this->insertValue($this->gRow,36,'  ______________ Соловьев Д.А.',false);
         $this->gRow ++;
+        $this->insertValue($this->gRow,33,'Начальник ПЭО',false);
+        $this->insertValue($this->gRow,36,'______________Кочегаров Д.В.',false);
         $this->gRow ++;
         $this->insertValue($this->gRow,1,"Нач.ПЭО________________ Л.Д.Сафонова",false);
         $this->gRow ++;
