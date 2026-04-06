@@ -9,6 +9,9 @@
 namespace Reports\FIO\Certificate;
 
 
+use DB\Connection;
+use DB\View\View_REP_FIO_Certificate_1;
+
 class MODEL extends \Reports\reportModel
 {
 
@@ -17,8 +20,9 @@ class MODEL extends \Reports\reportModel
         $conn = new \backend\Connection();
 
         $returnArray = $this->getHeadArray();
-        $data = $conn->table('View_REP_FIO_Certificate_1')
-            ->where('id_user',$this->getUser())
+        $d = new  View_REP_FIO_Certificate_1();
+        $data = $d
+            ->where($d::id_user,$this->getUser())
             ->select();
 
         $transName = new \models\NameCaseLib\NCLNameCaseRu();
