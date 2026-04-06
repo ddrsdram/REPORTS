@@ -9,6 +9,8 @@
 namespace Reports\FIO\CertificateOfTheDeceased;
 
 
+use DB\View\View_REP_FIO_Certificate_OfTheDeceased_JR;
+
 class MODEL extends \Reports\reportModel
 {
 
@@ -20,8 +22,9 @@ class MODEL extends \Reports\reportModel
 
 
         $returnArray = $this->getHeadArray();
-        $data = $conn->table('View_REP_FIO_Certificate_OfTheDeceased_JR')
-            ->where('id_user',$this->getUser())
+        $d = new View_REP_FIO_Certificate_OfTheDeceased_JR();
+        $data = $d
+            ->where($d::id_user,$this->getUser())
             ->select();
 
 

@@ -45,4 +45,8 @@ class View_REP_FIO_Certificate_1 extends Connection
 
 	const caption =  'caption';
 
+    const name_region =  'name_region';
+
+    const pref_region =  'pref_region';
+
 }
