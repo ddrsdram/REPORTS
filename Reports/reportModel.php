@@ -73,11 +73,6 @@ abstract class reportModel
             return Array();
     }
 
-    public function getUser()
-    {
-        return $this->dataReports_Array['id_User'];
-    }
-
     public function saveFileName()
     {
 
