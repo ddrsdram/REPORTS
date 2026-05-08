@@ -72,7 +72,8 @@ class VIEW extends \Reports\reportView
                 $listDev = $this->getStringDevByaLS($LS);
                 $str = "$LS;$FIO;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$name, $status_street $street, $house, $room;$listDev";
                 $str = iconv('UTF-8', 'windows-1251', $str);
-                fwrite($db, $str . chr(13) . chr(10));
+                if ($listDev !== '')
+                    fwrite($db, $str . chr(13) . chr(10));
         }
 
         fclose($db);
