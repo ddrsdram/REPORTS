@@ -9,6 +9,7 @@
 namespace Reports\ForPopulation\InformationBill_UK;
 
 
+use DB\Connection;
 use DB\Table\requisites;
 use DB\View\View_BB_Head;
 
@@ -90,11 +91,11 @@ class MODEL extends \Reports\reportModel
 
             $val['value'] = $value['value1'];
 
-            if (in_array($value['id_type_calculate'] , Array(16,17,2,6,25))){
+            if (in_array($value['id_type_calculate'] , Array(16,17,2,6))){
                 $val['value'] = $value['value2'] - $value['value1'];
             }
 
-            if (in_array($value['id_type_calculate'] , Array(8))){ // расчет ОДН
+            if (in_array($value['id_type_calculate'] , Array(8,25))){ // расчет ОДН
                 $val['value'] = $value['value4'];
             }
 
@@ -133,7 +134,7 @@ class MODEL extends \Reports\reportModel
         $col = 0;
         $bStr = false;
         $val = Array('caption1'=>'','name_type_accrual1'=>"","summa1"=>'',
-                    'caption2'=>'','name_type_accrual2'=>"","summa2"=>'');
+            'caption2'=>'','name_type_accrual2'=>"","summa2"=>'');
         $id_LS = 0;
         while ($value = $data_recalc->fetch()){
 
@@ -143,7 +144,7 @@ class MODEL extends \Reports\reportModel
                     $bStr = false;
                 }
                 $val = Array('caption1'=>'','name_type_accrual1'=>"","summa1"=>'',
-                             'caption2'=>'','name_type_accrual2'=>"","summa2"=>'');
+                    'caption2'=>'','name_type_accrual2'=>"","summa2"=>'');
                 $col = 0;
                 $LS_OLD1 = $value['id_LS'];
                 $bStr = true;
@@ -152,7 +153,7 @@ class MODEL extends \Reports\reportModel
             if ($col > 2) {
                 $col = 1;
             }
-            
+
             if ($col == 2) {
                 $LS_OLD1 = 0;
             }
