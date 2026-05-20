@@ -70,7 +70,8 @@ class VIEW extends \Reports\reportView
                 $HOUSEGUID_FIAS = $A['HOUSEGUID_FIAS'] == '' ? '' : $A['HOUSEGUID_FIAS'].$roomForFIAS; // Если есть ФИАС то добавляем фиас с номером квартиры иначе пустое поле
                 $kol++;
                 $listDev = $this->getStringDevByaLS($LS);
-                $str = "$LS;$FIO;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$name, $status_street $street, $house, $room;$listDev";
+                $year = date("m.Y");
+                $str = "05.$year;25.$year;$LS;$FIO;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$name, $status_street $street, $house, $room;$listDev";
                 $str = iconv('UTF-8', 'windows-1251', $str);
                 if ($listDev !== '')
                     fwrite($db, $str . chr(13) . chr(10));
