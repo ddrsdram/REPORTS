@@ -47,16 +47,19 @@ class MODEL extends \Reports\reportModel
 
         $dataText = date('d') . ' ' . $month[date('n')] . ' ' . date('Y');
 
-        if ($this->debtSum == 0){
+        if ($this->debtSum <= 0){
             $headArray['debtSum_txt'] = "На $dataText года задолженности нет";
             $headArray['debtSum_txt1'] = '';
         }else{
-            $headArray['debtSum_txt'] = "Задолженности на $dataText года составляет $this->debtSum рублей";
+
+            $sum = substr($this->debtSum,0,strlen($this->debtSum)-2);
+
+            $headArray['debtSum_txt'] = "Задолженность на $dataText года составляет $sum рублей";
             $headArray['debtSum_txt1'] = \models\Num2Str::getText($this->debtSum);
         }
 
         $bookkeeperArr = explode(' ',$headArray['bookkeeper']);
-        $headArray['bookkeeper'] = $bookkeeperArr[0] . ' ' . substr($bookkeeperArr[1],0,1) . ' ' . substr($bookkeeperArr[2],0,1);
+        $headArray['bookkeeper'] = $bookkeeperArr[0] . ' ' . mb_substr($bookkeeperArr[1],0,1) . '. ' . mb_substr($bookkeeperArr[2],0,1). '.';
 
         return $headArray;
     }
@@ -144,6 +147,6 @@ class MODEL extends \Reports\reportModel
         }
 
 
-       return $ret;
+        return $ret;
     }
 }
