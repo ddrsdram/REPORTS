@@ -51,30 +51,35 @@ class VIEW extends \Reports\reportView
 
         $db = fopen($this->resultFilePath.'/'.$this->nameReport.$this->extensionName, 'w+');
         $kol = 0;
+        $year = date("m.Y");
+        $str = "#DATE_BEGIN:15.$year";
+        fwrite($db, $str . chr(13) . chr(10));
+        $str = "#DATE_END:25.$year";
+        fwrite($db, $str . chr(13) . chr(10));
+
         foreach ($arr as $key => $A){
             // Это придумано для того, чтобы сравнивать с целочисленными занчениями, т.к. с сервера все приходит в тексте
-                // Это придумано для того, чтобы сравнивать с целочисленными занчениями, т.к. с сервера все приходит в тексте
+            // Это придумано для того, чтобы сравнивать с целочисленными занчениями, т.к. с сервера все приходит в тексте
 
-                $summa = str_replace('.', ",", $summa);
-                $name = $A['name']; // регион
-                $status_street = "{$A['status_street']}.";
-                $street = $A['UL']; //status_street
-                $house = $A['DOM'];
-                $room = $A['KV'];
-                $FIO = $A['FIO'];
-                $LS = $A['LCHET'];
-                $mes = str_pad($A['MES'], 2, '0', STR_PAD_LEFT);;
-                $year = substr($A['GOD'],2,2);
-                $id_LS_in_GISJKH = $A['id_LS_in_GISJKH'];
-                $roomForFIAS = $room == '' ? '' : ','.$room; // если есть квартира то добавляем к номеру по фиас
-                $HOUSEGUID_FIAS = $A['HOUSEGUID_FIAS'] == '' ? '' : $A['HOUSEGUID_FIAS'].$roomForFIAS; // Если есть ФИАС то добавляем фиас с номером квартиры иначе пустое поле
-                $kol++;
-                $listDev = $this->getStringDevByaLS($LS);
-                $year = date("m.Y");
-                $str = "05.$year;25.$year;$LS;$FIO;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$name, $status_street $street, $house, $room;$listDev";
-                $str = iconv('UTF-8', 'windows-1251', $str);
-                if ($listDev !== '')
-                    fwrite($db, $str . chr(13) . chr(10));
+            $summa = str_replace('.', ",", $summa);
+            $name = $A['name']; // регион
+            $status_street = "{$A['status_street']}.";
+            $street = $A['UL']; //status_street
+            $house = $A['DOM'];
+            $room = $A['KV'];
+            $FIO = $A['FIO'];
+            $LS = $A['LCHET'];
+            $mes = str_pad($A['MES'], 2, '0', STR_PAD_LEFT);;
+            $year = substr($A['GOD'],2,2);
+            $id_LS_in_GISJKH = $A['id_LS_in_GISJKH'];
+            $roomForFIAS = ($room == '') ? '' : ','.$room; // если есть квартира то добавляем к номеру по фиас
+            $HOUSEGUID_FIAS = ($A['HOUSEGUID_FIAS'] == '') ? '' : $A['HOUSEGUID_FIAS'].$roomForFIAS; // Если есть ФИАС то добавляем фиас с номером квартиры иначе пустое поле
+            $kol++;
+            $listDev = $this->getStringDevByaLS($LS);
+            $str = "$LS;$FIO;$id_LS_in_GISJKH;$HOUSEGUID_FIAS;$name, $status_street $street, $house, $room;$listDev";
+            $str = iconv('UTF-8', 'windows-1251', $str);
+            if ($listDev !== '')
+                fwrite($db, $str . chr(13) . chr(10));
         }
 
         fclose($db);
