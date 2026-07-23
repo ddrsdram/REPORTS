@@ -28,8 +28,8 @@ class Control extends \Reports\reportControl
         //$this->extensionName = $this->MODEL->getExtensionForRegion($H['DataAccrualsForSBER_id_region']);
         //$this->extensionName = "txt";
 
-        $fileName = sprintf('%02d',date('d')).sprintf('%02d',date('m')).sprintf('%02d',date('y'));
-        $fileName = "{$H['INN']}_{$H['RSCH']}_001_{$fileName}.txt";
+        $data = date('dmY');
+        $fileName = "COUNTERS_{$H['INN']}_{$H['RSCH']}_001_$data.txt";
         $this->MODEL->nameReport = $fileName ;
         $this->nameReport = $fileName;
         $this->defineModelVariable();

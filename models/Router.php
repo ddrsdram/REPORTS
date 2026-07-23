@@ -89,7 +89,7 @@ class Router
             ->setFileSource($fileName)
             ->setFileDestination($this->id_Reports_register)
             ->copy();
-        unlink($this->dirSource.$fileName);
+        //unlink($this->dirSource.$fileName);
     }
 
     private function runLater(){
