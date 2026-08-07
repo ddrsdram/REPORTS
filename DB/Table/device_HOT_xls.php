@@ -16,6 +16,8 @@ class device_HOT_xls extends \DB\Connection
 
     const value = 'value';
 
+    const formula = 'formula';
+
     const fileName = 'fileName';
 
     const extension = 'extension';
