@@ -33,12 +33,11 @@ class MODEL extends \Reports\reportModel
         fclose($file);
     }
 
-    public function getListExclude()
+    public function getFormula()
     {
-        $d = new device_HOT_xls_byRow();
-        return $d->where($d::id_xls,$this->id)
-            ->where($d::f_excludeRow,"1")
-            ->select()->fetchAll();
+        $d = new device_HOT_xls();
+        return $d->where($d::id,$this->id)
+            ->select($d::formula)->fetchField($d::formula);
     }
 
     public function getListFix()

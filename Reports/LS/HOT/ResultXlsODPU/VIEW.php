@@ -42,10 +42,39 @@ class VIEW extends \Reports\reportView
 
     public function addData()
     {
-        $this->row = 70;
-        $this->addListExclude();
-        $this->addListFix();
-        $this->addTotal();
+        $range = 'D65:AY81';
+
+// Если были старые объединения - убрать их
+        foreach ($this->Sheet->getMergeCells() as $mergedRange) {
+            if ($mergedRange == $range) {
+                $this->Sheet->unmergeCells($mergedRange);
+            }
+        }
+
+        $this->Sheet->mergeCells($range);
+
+        $this->Sheet->getStyle($range)->applyFromArray([
+            'font' => [
+                'color' => [
+                    'rgb' => 'FF0000' // красный цвет
+                ],
+                'size' => 14,
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP,
+                'wrapText' => true
+            ]
+        ]);
+        $formula = $this->MODEL->getFormula();
+        $formula = str_replace('#',chr(13).'Минус ГВС'.chr(13),$formula);
+        $total = $this->MODEL->getTotal();
+        $this->Sheet->getStyle($range)
+            ->getAlignment()
+            ->setWrapText(true);
+        $this->setCellValue('D65',value: "Qотоп = $formula ".chr(13)."= $total ГКал");
+
     }
 
     public function save()
@@ -54,46 +83,6 @@ class VIEW extends \Reports\reportView
         $writer->save($this->fileName);
     }
 
-
-    public function addListExclude()
-    {
-        $list = $this->MODEL->getListExclude();
-        if (count($list)<1)
-            return;
-        $d = new device_HOT_xls_byRow();
-        $this->setCellValue(4,$this->row, "Даты и объемы исключенные из расчета");
-        $this->row ++;
-        foreach ($list as $key => $item){
-            $this->setCellValue(4,$this->row, date('d.m.Y',strtotime($item[$d::d])));
-            $this->setCellValue(10,$this->row, " ".$item[$d::Q_pr]);
-            $this->row ++;
-
-        }
-        $this->row ++;
-    }
-
-    public function addListFix()
-    {
-        $list = $this->MODEL->getListFix();
-        if (count($list)<1)
-            return;
-        $d = new device_HOT_xls_byRow();
-        $this->setCellValue(4,$this->row, "Даты по которым произведено усредение");
-        $this->row ++;
-        foreach ($list as $key => $item){
-            $this->setCellValue(4,$this->row, date('d.m.Y',strtotime($item[$d::d])));
-            $this->setCellValue(10,$this->row, " ".$item[$d::Q_pr_new]);
-            $this->row ++;
-
-        }
-        $this->row ++;
-    }
-
-    public function addTotal()
-    {
-        $total = $this->MODEL->getTotal();
-        $this->setCellValue(4,$this->row, "Итого ГКал полсе расчетов $total");
-    }
 
     private function setCellValue($cellOrCol, $row = null,$value = '')
     {
